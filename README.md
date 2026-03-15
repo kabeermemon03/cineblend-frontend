@@ -1,0 +1,63 @@
+# CineBlend Studios - Modern Creative Agency Website
+
+A high-end, fully responsive creative agency website for **CineBlend Studios**, built with React, TypeScript, and Tailwind CSS.
+
+## 🚀 Features
+
+- **Modern Tech Stack**: React 18, TypeScript, Vite.
+- **Cinematic UI/UX**: Dark theme with Mocha Mousse and Dark Purple accents.
+- **Smooth Animations**: Powered by Framer Motion for premium interactions.
+- **Responsive Design**: Fully optimized for mobile, tablet, and desktop.
+- **Dynamic Routing**: React Router for seamless page transitions.
+- **Robust Forms**: React Hook Form with validation for project inquiries.
+- **Clean Architecture**: Modular and scalable folder structure.
+
+## 🛠️ Installation & Setup
+
+1. **Install Node.js**: Ensure you have [Node.js LTS](https://nodejs.org/) installed.
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+   *Note: If you see red underlines in the IDE, running `npm install` will resolve them by installing the necessary type definitions.*
+
+3. **Start Development Server**:
+   ```bash
+   npm run dev
+   ```
+
+## 🧩 Troubleshooting
+
+- **Missing Modules Error**: If you see "Cannot find module 'react'", it means `node_modules` is missing. Run `npm install`.
+- **TypeScript Errors**: The project uses strict TypeScript. Ensure all components are properly typed.
+- **Path Aliases**: We use `@/` to refer to the `src/` directory. This is configured in `vite.config.ts` and `tsconfig.json`.
+
+## 📂 Project Structure
+
+- `src/components`: Reusable UI elements (Buttons, Cards, etc.)
+- `src/layout`: Global layout (Navbar, Footer, Progress bar)
+- `src/pages`: Main page components (Home, About, Services, etc.)
+- `src/sections`: Specific page sections (Hero, Stats, FAQ)
+- `src/styles`: Tailwind CSS and global styles
+- `src/lib`: Utility functions and library configurations
+- `src/hooks`: Custom React hooks
+
+## 🎨 Design System
+
+- **Primary Colors**: 
+  - Mocha Mousse: `#96694C`
+  - Dark Purple: `#301934`
+- **Background**: Deep Black (`#000000`)
+- **Accents**: Blue Electric, Light Purple
+- **Typography**: Plus Jakarta Sans (Modern Sans-Serif)
+
+## 🔮 Future Roadmap
+
+- Integration with Django REST API or Supabase/Firebase.
+- Advanced scroll-triggered animations.
+- Dynamic portfolio fetching from CMS.
+- Multi-language support (i18n).
+
+## 📄 License
+
+This project is licensed under the MIT License.
