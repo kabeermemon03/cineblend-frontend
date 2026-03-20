@@ -1,52 +1,34 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { Video, Camera, Palette, Code, Layers, ArrowRight, Play, CheckCircle2, Star, Zap } from 'lucide-react'
+import { Video, Palette, Code, Star, Zap, Play } from 'lucide-react'
 import Button from '@/components/ui/Button'
 
 const servicesData = [
   {
     id: 'video',
-    title: 'Video Editing',
+    title: 'Video Production',
     icon: Video,
     color: 'from-blue-500 to-blue-700',
-    description: 'Cinematic storytelling, YouTube edits, reels, shorts, and professional commercial color grading.',
-    features: ['YouTube & Social Media Editing', 'Cinematic Color Grading', 'Reels, Shorts & TikTok Edits', 'Commercial & Ad Video Production', 'Sound Design & Mixing'],
+    description: 'Cinematic storytelling and professional video editing for all platforms.',
+    features: ['YouTube & Long-form Editing', 'Cinematic Reels & Shorts', 'Commercial & Ad Production', 'Professional Color Grading', 'Advanced Sound Design', 'VFX & Motion Graphics'],
     image: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&q=80'
   },
   {
-    id: 'photo',
-    title: 'Photo Editing',
-    icon: Camera,
-    color: 'from-purple-500 to-purple-700',
-    description: 'High-end retouching, restoration, color correction, and creative photo manipulations.',
-    features: ['Professional Retouching', 'Advanced Color Correction', 'Photo Restoration', 'Product Photography Editing', 'Creative Compositing'],
-    image: 'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&q=80'
-  },
-  {
     id: 'graphic',
-    title: 'Graphic Design',
+    title: 'Brand Identity',
     icon: Palette,
     color: 'from-mocha to-mocha-dark',
-    description: 'Social media assets, banners, marketing materials, and print-ready designs.',
-    features: ['Social Media Graphics', 'Marketing Banners & Ads', 'Business Stationery', 'Presentation Design', 'Custom Illustrations'],
+    description: 'Comprehensive design solutions to establish and elevate your visual presence.',
+    features: ['Minimalist Logo Design', 'Full Brand Identity Kits', 'Social Media Branding', 'Marketing Assets', 'Business Stationery', 'Presentation Design'],
     image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&q=80'
   },
   {
-    id: 'logo',
-    title: 'Logo Design',
-    icon: Layers,
-    color: 'from-amber-500 to-amber-700',
-    description: 'Minimalist logos, brand identity systems, and comprehensive business branding.',
-    features: ['Minimal & Modern Logos', 'Full Brand Identity Kits', 'Typography & Color Systems', 'Brand Style Guides', 'Logo Motion Design'],
-    image: 'https://images.unsplash.com/photo-1572044162444-ad60f128bde2?auto=format&fit=crop&q=80'
-  },
-  {
     id: 'web',
-    title: 'Web Development',
+    title: 'Web Engineering',
     icon: Code,
     color: 'from-emerald-500 to-emerald-700',
-    description: 'Modern, high-performance websites built with React, TypeScript, and the latest technologies.',
-    features: ['Custom React & TypeScript Apps', 'Responsive Modern Design', 'Performance Optimization', 'SEO-friendly Architecture', 'Interactive Animations'],
+    description: 'High-performance, modern web applications built for the next generation.',
+    features: ['Custom Portfolio Sites', 'UI/UX Prototyping', 'Full-stack SaaS Platforms', 'Performance Optimization', 'Interactive React Apps', 'SEO & Digital Strategy'],
     image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80'
   }
 ]
@@ -58,129 +40,189 @@ const Services = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="space-y-32 py-20"
+      className="space-y-32 py-20 relative min-h-screen bg-black"
     >
-      {/* Hero Section */}
-      <section className="container mx-auto px-6 md:px-12 text-center max-w-4xl space-y-8">
-        <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-mocha/10 border border-mocha/20 text-mocha backdrop-blur-md">
-          <Zap className="w-4 h-4" />
-          <span className="text-xs font-semibold uppercase tracking-widest">
-            Our Expertise
-          </span>
-        </div>
-        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-tight">
-          Crafting <span className="text-mocha">Excellence</span> Across Every Digital Dimension
-        </h1>
-        <p className="text-lg text-white/60 leading-relaxed max-w-2xl mx-auto">
-          From cinematic video production to high-performance web applications, 
-          we combine artistic vision with technical precision to help you 
-          achieve your most ambitious creative goals.
-        </p>
-      </section>
+      {/* Cinematic Background Layer */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-black" />
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-mocha/5 blur-[150px] animate-pulse" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-purple-dark/5 blur-[150px] animate-pulse" />
+      </div>
 
-      {/* Services List */}
-      <section className="container mx-auto px-6 md:px-12 space-y-40">
-        {servicesData.map((service, index) => (
-          <motion.div
-            key={service.id}
-            id={service.id}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            viewport={{ once: true, margin: "-100px" }}
-            className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-16 lg:gap-24`}
+      <div className="relative z-10">
+        {/* Hero Section */}
+        <section className="container mx-auto px-6 md:px-12 text-center max-w-4xl space-y-12 py-24">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center space-x-3 px-5 py-2 rounded-full bg-mocha/10 border border-mocha/20 text-mocha backdrop-blur-xl"
           >
-            <div className="lg:w-1/2 space-y-8">
-              <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-500`}>
-                <service.icon className="w-8 h-8 text-white" />
-              </div>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
-                {service.title}
-              </h2>
-              <p className="text-xl text-white/60 leading-relaxed">
-                {service.description}
-              </p>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {service.features.map((feature, i) => (
-                  <li key={i} className="flex items-center space-x-3 text-white/80 group">
-                    <CheckCircle2 className="w-5 h-5 text-mocha flex-shrink-0" />
-                    <span className="group-hover:text-mocha transition-colors">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="pt-4 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                <Link to="/contact">
-                  <Button variant="glow" size="lg" className="w-full sm:w-auto">
-                    Start {service.title} Project
-                  </Button>
-                </Link>
-                <Link to="/portfolio">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto group">
-                    View Portfolio
-                    <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            
-            <div className="lg:w-1/2 relative group">
-              <div className="aspect-[16/10] rounded-3xl overflow-hidden glass-card border-white/5 relative z-10 shadow-2xl">
-                <img 
-                  src={service.image} 
-                  alt={service.title} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60" />
-                
-                {/* Overlay Play Button for Video Service */}
-                {service.id === 'video' && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <motion.button 
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="w-20 h-20 rounded-full bg-mocha/80 backdrop-blur-md flex items-center justify-center text-white"
-                    >
-                      <Play className="w-8 h-8 fill-white" />
-                    </motion.button>
+            <Zap className="w-4 h-4 fill-mocha" />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em]">
+              The CineBlend Standard
+            </span>
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.85] text-white"
+          >
+            Mastering the <br />
+            <span className="text-mocha">Digital</span> <span className="text-gradient">Arts</span>
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-xl text-white/40 leading-relaxed max-w-2xl mx-auto font-medium"
+          >
+            We don't just provide services; we craft legacies. From cinematic video 
+            to high-performance engineering, our studio is where vision meets reality.
+          </motion.p>
+        </section>
+
+        {/* Services List */}
+        <section className="container mx-auto px-6 md:px-12 space-y-60 pb-40">
+          {servicesData.map((service, index) => (
+            <motion.div
+              key={service.id}
+              id={service.id}
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              viewport={{ once: true, margin: "-100px" }}
+              className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-20 lg:gap-32`}
+            >
+              <div className="lg:w-1/2 space-y-12">
+                <div className="space-y-6">
+                  <span className="text-6xl font-black text-white/5 tracking-tighter">0{index + 1}</span>
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center shadow-2xl`}>
+                    <service.icon className="w-7 h-7 text-white" />
                   </div>
-                )}
+                  <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-white">
+                    {service.title}
+                  </h2>
+                  <p className="text-xl text-white/40 leading-relaxed font-medium">
+                    {service.description}
+                  </p>
+                </div>
+                
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {service.features.map((feature, i) => (
+                    <li key={i} className="flex items-center space-x-4 text-white/60 group">
+                      <div className="w-1.5 h-1.5 rounded-full bg-mocha group-hover:scale-150 transition-transform duration-300" />
+                      <span className="text-sm font-bold uppercase tracking-widest group-hover:text-white transition-colors">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="pt-8 flex flex-col sm:flex-row gap-6">
+                  <Link to="/contact">
+                    <Button variant="glow" size="lg" className="w-full sm:w-auto px-10 py-6 text-lg font-black uppercase tracking-widest">
+                      Initialize Project
+                    </Button>
+                  </Link>
+                </div>
               </div>
               
-              {/* Decorative Background Elements */}
-              <div className={`absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br ${service.color} opacity-20 rounded-full blur-[80px] -z-0 group-hover:opacity-30 transition-opacity duration-700`} />
-              <div className={`absolute -bottom-10 -left-10 w-60 h-60 bg-gradient-to-br ${service.color} opacity-10 rounded-full blur-[100px] -z-0 group-hover:opacity-20 transition-opacity duration-700`} />
-            </div>
-          </motion.div>
-        ))}
-      </section>
+              <div className="lg:w-1/2 relative group">
+                <div className="aspect-[4/5] rounded-[3rem] overflow-hidden glass-card border-white/5 relative z-10 shadow-2xl transition-all duration-1000 group-hover:border-mocha/20">
+                  <img 
+                    src={service.image} 
+                    alt={service.title} 
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
+                  
+                  {service.id === 'video' && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <motion.button 
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="w-24 h-24 rounded-full bg-mocha/20 backdrop-blur-3xl border border-white/10 flex items-center justify-center text-white group-hover:bg-mocha/40 transition-colors"
+                      >
+                        <Play className="w-8 h-8 fill-white" />
+                      </motion.button>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Decorative Accents */}
+                <div className={`absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br ${service.color} opacity-10 rounded-full blur-[100px] -z-0 group-hover:opacity-20 transition-opacity duration-1000`} />
+              </div>
+            </motion.div>
+          ))}
+        </section>
 
-      {/* Trust & CTA Section */}
-      <section className="container mx-auto px-6 md:px-12 pb-20">
-        <div className="p-12 md:p-20 rounded-[3rem] bg-gradient-to-br from-mocha-dark/40 via-purple-dark/40 to-background border border-white/10 relative overflow-hidden text-center">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-mocha/10 blur-[120px] rounded-full pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-60 h-60 bg-purple-brand/10 blur-[100px] rounded-full pointer-events-none" />
-          
-          <div className="max-w-3xl mx-auto space-y-8 relative z-10">
-            <div className="inline-flex items-center space-x-1">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-6 h-6 text-amber-500 fill-amber-500" />
+        {/* Enhanced FAQ Section - Essential for Service Sites */}
+        <section className="container mx-auto px-6 md:px-12 py-40 border-t border-white/5">
+          <div className="max-w-4xl mx-auto space-y-20">
+            <div className="text-center space-y-6">
+              <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-white">Common <span className="text-mocha">Inquiries</span></h2>
+              <p className="text-white/30 text-xl font-medium">Everything you need to know about partnering with CineBlend.</p>
+            </div>
+
+            <div className="space-y-6">
+              {[
+                { q: "What is the typical project timeline?", a: "Timelines vary by scope, but most cinematic edits take 5-10 business days, while full web builds range from 3-6 weeks." },
+                { q: "Do you offer priority delivery?", a: "Yes, our 'Express CineBit' service guarantees a 48-hour turnaround for select video and design projects." },
+                { q: "Can I request revisions?", a: "Absolutely. Every project includes 2-3 rounds of revisions to ensure the final result perfectly matches your vision." },
+                { q: "What files will I receive?", a: "You'll receive all final assets in high-resolution industry formats (4K Video, Vector Logos, Source Code) along with full usage rights." }
+              ].map((faq, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="p-8 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:border-mocha/20 transition-all duration-500 group"
+                >
+                  <h4 className="text-xl font-black text-white group-hover:text-mocha transition-colors mb-4 flex items-center gap-4">
+                    <span className="text-mocha/30">0{i+1}</span>
+                    {faq.q}
+                  </h4>
+                  <p className="text-white/40 leading-relaxed font-medium pl-10">
+                    {faq.a}
+                  </p>
+                </motion.div>
               ))}
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
-              Ready to create something <span className="text-gradient">legendary?</span>
-            </h2>
-            <p className="text-lg text-white/60">
-              Join hundreds of successful creators and brands who have transformed 
-              their digital presence with CineBlend Studios.
-            </p>
-            <Link to="/contact">
-              <Button variant="glow" size="lg" className="px-12">
-                Get Your Custom Quote
-              </Button>
-            </Link>
           </div>
-        </div>
-      </section>
+        </section>
+
+        {/* Trust & CTA Section */}
+        <section className="container mx-auto px-6 md:px-12 pb-40">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            className="p-16 md:p-32 rounded-[4rem] bg-gradient-to-br from-mocha-dark/5 via-purple-dark/5 to-transparent border border-white/5 relative overflow-hidden text-center backdrop-blur-3xl shadow-2xl"
+          >
+            <div className="absolute top-0 right-0 w-80 h-80 bg-mocha/5 blur-[120px] rounded-full pointer-events-none" />
+            
+            <div className="max-w-3xl mx-auto space-y-12 relative z-10">
+              <div className="inline-flex items-center space-x-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-5 h-5 text-mocha fill-mocha" />
+                ))}
+              </div>
+              <h2 className="text-5xl md:text-8xl font-black tracking-tighter text-white leading-[0.9]">
+                Ready to create <br />
+                <span className="text-gradient">Legendary</span> results?
+              </h2>
+              <p className="text-xl text-white/40 font-medium">
+                Join the visionary creators who have redefined their digital presence with us.
+              </p>
+              <div className="pt-8">
+                <Link to="/contact">
+                  <Button variant="glow" size="lg" className="px-16 py-8 text-xl font-black uppercase tracking-widest shadow-2xl">
+                    Get Started Now
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        </section>
+      </div>
     </motion.div>
   )
 }

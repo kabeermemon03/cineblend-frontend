@@ -22,39 +22,42 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     window.scrollTo(0, 0)
   }, [pathname])
 
-  // Mouse move effect for glowing background
+  // Mouse move effect for glowing background - Optimized with requestAnimationFrame
   useEffect(() => {
+    let rafId: number;
     const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth) * 100
-      const y = (e.clientY / window.innerHeight) * 100
-      document.documentElement.style.setProperty('--mouse-x', `${x}%`)
-      document.documentElement.style.setProperty('--mouse-y', `${y}%`)
+      rafId = requestAnimationFrame(() => {
+        const x = (e.clientX / window.innerWidth) * 100
+        const y = (e.clientY / window.innerHeight) * 100
+        document.documentElement.style.setProperty('--mouse-x', `${x}%`)
+        document.documentElement.style.setProperty('--mouse-y', `${y}%`)
+      });
     }
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      cancelAnimationFrame(rafId);
+    }
   }, [])
 
   return (
     <div className="relative min-h-screen bg-background overflow-x-hidden">
-      {/* Scroll Progress Bar */}
+      {/* Scroll Progress Bar - Lowered z-index to stay below navbar if needed, or moved to avoid overlap */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-mocha via-purple-brand to-blue-electric origin-left z-[60]"
+        className="fixed top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-mocha via-purple-brand to-mocha origin-left z-40"
         style={{ scaleX }}
       />
 
-      {/* Global Background Accents */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+      {/* Global Background Accents - Optimized for Performance */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden h-full">
         <div 
-          className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-mocha/10 rounded-full blur-[120px] animate-pulse" 
-          style={{ animationDuration: '8s' }}
+          className="absolute top-0 -left-[10%] w-[50%] h-[30%] bg-mocha/5 rounded-full blur-[80px]" 
         />
         <div 
-          className="absolute top-[40%] -right-[10%] w-[40%] h-[40%] bg-purple-dark/20 rounded-full blur-[100px] animate-pulse" 
-          style={{ animationDuration: '12s' }}
+          className="absolute top-[40%] -right-[10%] w-[40%] h-[20%] bg-purple-dark/10 rounded-full blur-[70px]" 
         />
         <div 
-          className="absolute -bottom-[10%] left-[20%] w-[60%] h-[60%] bg-blue-brand/5 rounded-full blur-[150px] animate-pulse" 
-          style={{ animationDuration: '10s' }}
+          className="absolute bottom-0 left-[20%] w-[60%] h-[40%] bg-blue-brand/5 rounded-full blur-[100px]" 
         />
       </div>
 

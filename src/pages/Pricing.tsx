@@ -1,181 +1,195 @@
 import { motion } from 'framer-motion'
-import { Check, Zap, Star, ShieldCheck, ArrowRight, HelpCircle } from 'lucide-react'
+import { useState } from 'react'
+import { Zap, ArrowRight, MessageSquare, Clock, Shield, Star } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import Button from '@/components/ui/Button'
-import { cn } from '@/lib/utils'
 
-const pricingTiers = [
-  {
-    name: 'Starter',
-    price: '$499',
-    description: 'Perfect for individual content creators and small brands looking for professional visuals.',
-    features: [
-      '2 Video Edits (up to 5 min)',
-      '5 Graphic Design Assets',
-      'Basic Color Grading',
-      'Standard Support',
-      '2 Revision Rounds'
-    ],
-    icon: Zap,
-    color: 'text-blue-electric',
-    highlight: false
-  },
-  {
-    name: 'Standard',
-    price: '$1,299',
-    description: 'Ideal for growing startups and established creators needing regular creative output.',
-    features: [
-      '5 Video Edits (up to 15 min)',
-      '15 Graphic Design Assets',
-      'Advanced Color Grading',
-      'Priority Support',
-      '4 Revision Rounds',
-      'Source Files Included'
-    ],
-    icon: Star,
-    color: 'text-mocha',
-    highlight: true
-  },
-  {
-    name: 'Pro',
-    price: '$2,999',
-    description: 'Full-service creative partnership for businesses and large-scale brands.',
-    features: [
-      'Unlimited Video Edits',
-      'Unlimited Graphic Design',
-      'Custom Branding Package',
-      'Dedicated Project Manager',
-      'Unlimited Revision Rounds',
-      'Commercial Usage License',
-      'Priority Turnaround'
-    ],
-    icon: ShieldCheck,
-    color: 'text-purple-light',
-    highlight: false
+const OurSolutionsPage = () => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    setMousePos({
+      x: ((e.clientX - rect.left) / rect.width) * 100,
+      y: ((e.clientY - rect.top) / rect.height) * 100
+    })
   }
-]
 
-const Pricing = () => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="space-y-32 py-20"
+      className="space-y-32 py-20 bg-black"
     >
       {/* Hero Section */}
-      <section className="container mx-auto px-6 md:px-12 text-center max-w-4xl space-y-8">
+      <section className="container mx-auto px-6 md:px-12 text-center max-w-4xl space-y-8 relative z-10 pt-16">
         <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-mocha/10 border border-mocha/20 text-mocha backdrop-blur-md">
           <Zap className="w-4 h-4" />
-          <span className="text-xs font-semibold uppercase tracking-widest">
-            Pricing Plans
+          <span className="text-[10px] font-black uppercase tracking-widest">
+            Studio Solutions
           </span>
         </div>
-        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-tight">
-          Transparent <span className="text-mocha">Pricing</span> for <span className="text-gradient">Every Vision</span>
+        <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] text-white">
+          Our <br />
+          <span className="text-mocha text-glow">Premium Packages</span>
         </h1>
-        <p className="text-lg text-white/60 leading-relaxed max-w-2xl mx-auto">
-          Choose a plan that fits your creative needs and budget. 
-          No hidden fees, just premium quality results.
+        <p className="text-xl text-white/40 leading-relaxed max-w-2xl mx-auto font-medium">
+          We believe every creative project is unique. Instead of fixed tiers, 
+          we offer personalized solutions via our CineBit request system, 
+          ensuring you only pay for exactly what you need.
         </p>
       </section>
 
-      {/* Pricing Grid */}
-      <section className="container mx-auto px-6 md:px-12">
+      {/* Why Custom Flow */}
+      <section className="container mx-auto px-6 md:px-12 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {pricingTiers.map((tier, index) => (
+          {[
+            {
+              title: "Tailored Strategy",
+              description: "We analyze your brand's specific needs to create a custom service plan that drives results.",
+              icon: MessageSquare,
+              color: "text-blue-400"
+            },
+            {
+              title: "Flexible Scalability",
+              description: "Whether it's a one-off request or an ongoing partnership, we scale our services to fit your growth.",
+              icon: Clock,
+              color: "text-mocha"
+            },
+            {
+              title: "Premium Quality",
+              description: "Every project gets our full cinematic attention, regardless of size or complexity.",
+              icon: Shield,
+              color: "text-purple-400"
+            }
+          ].map((item, index) => (
             <motion.div
-              key={tier.name}
-              initial={{ opacity: 0, y: 30 }}
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.8 }}
+              transition={{ delay: index * 0.1 }}
+              onMouseMove={handleMouseMove}
               viewport={{ once: true }}
-              className={cn(
-                "relative p-10 rounded-[2.5rem] glass-card border flex flex-col justify-between transition-all duration-500",
-                tier.highlight 
-                  ? "bg-mocha/5 border-mocha/30 shadow-2xl shadow-mocha/10 scale-105 z-10" 
-                  : "bg-white/5 border-white/5 hover:border-white/10"
-              )}
+              className="group relative p-12 rounded-[3.5rem] bg-white/[0.02] border border-white/5 hover:border-mocha/30 transition-all duration-700 overflow-hidden backdrop-blur-3xl"
             >
-              {tier.highlight && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-mocha text-white text-[10px] font-bold uppercase tracking-[0.2em] px-6 py-2 rounded-full shadow-lg">
-                  Most Popular
-                </div>
-              )}
+              {/* Glare Hover Effect */}
+              <div 
+                className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-20 transition-opacity duration-500 z-10"
+                style={{
+                  background: `radial-gradient(circle at ${mousePos.x}% ${mousePos.y}%, rgba(255,255,255,0.2) 0%, transparent 60%)`
+                }}
+              />
 
-              <div className="space-y-8">
-                <div className="flex justify-between items-start">
-                  <div className={`w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center`}>
-                    <tier.icon className={`w-7 h-7 ${tier.color}`} />
-                  </div>
-                  <div className="text-right">
-                    <div className="text-4xl font-extrabold text-white">{tier.price}</div>
-                    <div className="text-xs font-bold uppercase tracking-widest text-white/40 mt-1">/ Month</div>
-                  </div>
+              <div className="relative z-20 space-y-8">
+                <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-2xl">
+                  <item.icon className={`w-8 h-8 ${item.color}`} />
                 </div>
-
                 <div className="space-y-4">
-                  <h3 className="text-3xl font-bold text-white">{tier.name}</h3>
-                  <p className="text-white/60 text-sm leading-relaxed">
-                    {tier.description}
+                  <h3 className="text-3xl font-black text-white tracking-tight leading-none">{item.title}</h3>
+                  <p className="text-base text-white/30 leading-relaxed font-medium group-hover:text-white/50 transition-colors">
+                    {item.description}
                   </p>
                 </div>
-
-                <ul className="space-y-4 py-8 border-y border-white/5">
-                  {tier.features.map((feature) => (
-                    <li key={feature} className="flex items-start space-x-3 group">
-                      <div className="mt-1 w-5 h-5 rounded-full bg-mocha/10 flex items-center justify-center flex-shrink-0 group-hover:bg-mocha/30 transition-colors">
-                        <Check className="w-3 h-3 text-mocha" />
-                      </div>
-                      <span className="text-sm text-white/80 group-hover:text-white transition-colors">
-                        {feature}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="pt-10">
-                <Link to="/contact">
-                  <Button 
-                    variant={tier.highlight ? "glow" : "outline"} 
-                    className="w-full"
-                    size="lg"
-                  >
-                    Select {tier.name}
-                  </Button>
-                </Link>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-white/20 text-center mt-6 flex items-center justify-center">
-                  <HelpCircle className="w-3 h-3 mr-2" />
-                  Custom options available
-                </p>
               </div>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* FAQ Link Section */}
-      <section className="container mx-auto px-6 md:px-12 pb-20">
-        <div className="p-12 md:p-16 rounded-[2.5rem] bg-white/5 border border-white/5 flex flex-col md:flex-row items-center justify-between gap-12 text-center md:text-left">
-          <div className="space-y-4 max-w-xl">
-            <h3 className="text-3xl font-bold text-white">Need a custom enterprise solution?</h3>
-            <p className="text-white/60">
-              We offer bespoke creative services for larger agencies and enterprise 
-              businesses. Let's discuss your specific requirements.
-            </p>
+      {/* Package Categories Section */}
+      <section className="container mx-auto px-6 md:px-12 relative z-10 overflow-hidden">
+        <div className="max-w-4xl mx-auto space-y-16">
+          <div className="text-center space-y-4">
+            <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter">Value-Driven <span className="text-mocha">Solutions</span></h2>
+            <p className="text-white/30 text-lg font-medium">Explore how we bring your vision to life across multiple creative fronts.</p>
           </div>
-          <Link to="/contact">
-            <Button variant="outline" size="lg" className="px-12 group whitespace-nowrap">
-              Talk to Us
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
+          
+          <div className="grid grid-cols-1 gap-12">
+            {[
+              {
+                category: "Video Production",
+                features: ["4K Cinematic Editing", "Sound Design & Scoring", "Color Grading", "VFX & Motion Graphics"],
+                cta: "Request Video Service"
+              },
+              {
+                category: "Brand Identity",
+                features: ["Logo & Style Guides", "Social Media Kits", "Print & Digital Assets", "Marketing Collateral"],
+                cta: "Request Design Service"
+              },
+              {
+                category: "Digital Presence",
+                features: ["Portfolio Websites", "Custom SaaS Platforms", "Performance Optimization", "UI/UX Prototyping"],
+                cta: "Request Web Service"
+              }
+            ].map((pkg, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="flex flex-col md:flex-row items-center justify-between p-10 md:p-16 rounded-[4rem] bg-white/[0.01] border border-white/5 hover:bg-white/[0.03] transition-all duration-700 group"
+              >
+                <div className="space-y-8 text-center md:text-left">
+                  <h3 className="text-4xl font-black text-white tracking-tight">{pkg.category}</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {pkg.features.map((f, j) => (
+                      <div key={j} className="flex items-center space-x-3 text-white/40 font-medium">
+                        <div className="w-1.5 h-1.5 rounded-full bg-mocha/40 group-hover:bg-mocha transition-colors" />
+                        <span>{f}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <Link to="/request-cinebit" className="mt-10 md:mt-0">
+                  <Button variant="glow" className="px-10 py-5 rounded-2xl group-hover:scale-105 transition-transform">
+                    {pkg.cta}
+                  </Button>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="container mx-auto px-6 md:px-12 pb-20">
+        <div className="p-12 md:p-20 rounded-[4rem] bg-gradient-to-br from-mocha-dark/10 via-purple-dark/10 to-background border border-white/5 relative overflow-hidden text-center backdrop-blur-2xl">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-mocha/5 blur-[80px] rounded-full pointer-events-none" />
+          
+          <div className="max-w-3xl mx-auto space-y-10 relative z-10">
+            <div className="inline-flex items-center space-x-1">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-6 h-6 text-amber-500 fill-amber-500" />
+              ))}
+            </div>
+            <h2 className="text-5xl md:text-6xl font-black tracking-tighter text-white leading-none">
+              Ready to request <br />
+              <span className="text-mocha text-glow">your next project?</span>
+            </h2>
+            <p className="text-xl text-white/40 leading-relaxed font-medium">
+              Fill out our service request form and we'll get back to you with a 
+              custom proposal tailored to your vision within 24 hours.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4">
+              <Link to="/request-cinebit">
+                <Button variant="glow" size="lg" className="px-12 py-5 rounded-2xl">
+                  Initialize Request
+                  <ArrowRight className="ml-3 w-5 h-5" />
+                </Button>
+              </Link>
+              <Link to="/contact">
+                <Button variant="outline" size="lg" className="px-12 py-5 rounded-2xl border-white/10 text-white/40 hover:text-white">
+                  Contact Studio
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </motion.div>
   )
 }
 
-export default Pricing
+export default OurSolutionsPage

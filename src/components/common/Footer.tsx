@@ -3,15 +3,16 @@ import { Play, Instagram, Twitter, Linkedin } from 'lucide-react'
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
+  const logoUrl = "https://firebasestorage.googleapis.com/v0/b/cineblend-studios.appspot.com/o/assets%2Flogo.png?alt=media";
 
   const sections = [
     {
       title: 'Company',
       links: [
         { name: 'About', path: '/about' },
-        { name: 'Portfolio', path: '/portfolio' },
+        { name: 'Careers', path: '/careers' },
         { name: 'Services', path: '/services' },
-        { name: 'Pricing', path: '/pricing' },
+        { name: 'Request a CineBit', path: '/request-cinebit' },
         { name: 'Contact', path: '/contact' },
       ],
     },
@@ -22,7 +23,6 @@ const Footer = () => {
         { name: 'Graphic Design', path: '/services#graphic' },
         { name: 'Web Development', path: '/services#web' },
         { name: 'Logo Design', path: '/services#logo' },
-        { name: 'Photo Editing', path: '/services#photo' },
       ],
     },
     {
@@ -43,9 +43,18 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 relative z-10">
         {/* Brand Column */}
         <div className="lg:col-span-2 space-y-6">
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-mocha to-purple-dark rounded-xl flex items-center justify-center">
-              <Play className="w-5 h-5 text-white fill-white" />
+          <Link to="/" className="flex items-center space-x-3">
+            <div className="relative w-10 h-10 overflow-hidden rounded-xl bg-gradient-to-br from-mocha to-purple-dark flex items-center justify-center">
+              <img 
+                src={logoUrl} 
+                alt="CineBlend Logo" 
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                  (e.target as HTMLImageElement).parentElement?.querySelector('.fallback-icon')?.classList.remove('hidden');
+                }}
+              />
+              <Play className="fallback-icon hidden w-5 h-5 text-white fill-white" />
             </div>
             <span className="text-xl font-bold tracking-tighter text-white">
               CINE<span className="text-mocha">BLEND</span>

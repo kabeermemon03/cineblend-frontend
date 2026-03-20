@@ -2,16 +2,18 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 interface User {
-  id: number
-  username: string
-  email: string
+  uid: string
+  displayName: string | null
+  email: string | null
+  photoURL: string | null
 }
 
 interface AuthState {
   user: User | null
-  token: string | null
   isAuthenticated: boolean
-  setAuth: (user: User, token: string) => void
+  isLoading: boolean
+  setAuth: (user: User | null) => void
+  setLoading: (loading: boolean) => void
   logout: () => void
 }
 
@@ -19,10 +21,11 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
-      token: null,
       isAuthenticated: false,
-      setAuth: (user, token) => set({ user, token, isAuthenticated: true }),
-      logout: () => set({ user: null, token: null, isAuthenticated: false }),
+      isLoading: true,
+      setAuth: (user) => set({ user, isAuthenticated: !!user, isLoading: false }),
+      setLoading: (loading) => set({ isLoading: loading }),
+      logout: () => set({ user: null, isAuthenticated: false, isLoading: false }),
     }),
     {
       name: 'cineblend-auth',

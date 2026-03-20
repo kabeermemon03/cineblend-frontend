@@ -1,10 +1,22 @@
+import { Suspense, lazy } from 'react'
 import { motion } from 'framer-motion'
 import Hero from '@/sections/Home/Hero.tsx'
-import ServicesPreview from '@/sections/Home/ServicesPreview.tsx'
-import PortfolioSection from '@/sections/Home/PortfolioSection.tsx'
-import Testimonials from '@/sections/Home/Testimonials.tsx'
-import Stats from '@/sections/Home/Stats.tsx'
-import FAQ from '@/sections/Home/FAQ.tsx'
+
+// Lazy load sections below the fold
+const ServicesPreview = lazy(() => import('@/sections/Home/ServicesPreview.tsx'))
+const ProjectShowcase = lazy(() => import('@/sections/Home/ProjectShowcase.tsx'))
+const HowWeWork = lazy(() => import('@/sections/Home/HowWeWork.tsx'))
+const Showreel = lazy(() => import('@/sections/Home/Showreel.tsx'))
+const Testimonials = lazy(() => import('@/sections/Home/Testimonials.tsx'))
+const Stats = lazy(() => import('@/sections/Home/Stats.tsx'))
+const FAQ = lazy(() => import('@/sections/Home/FAQ.tsx'))
+
+// Loading Skeleton for sections
+const SectionSkeleton = () => (
+  <div className="w-full h-[400px] flex items-center justify-center">
+    <div className="w-12 h-12 border-2 border-mocha/20 border-t-mocha rounded-full animate-spin" />
+  </div>
+)
 
 const Home = () => {
   return (
@@ -16,11 +28,34 @@ const Home = () => {
       className="space-y-32"
     >
       <Hero />
-      <ServicesPreview />
-      <PortfolioSection />
-      <Stats />
-      <Testimonials />
-      <FAQ />
+      
+      <Suspense fallback={<SectionSkeleton />}>
+        <Showreel />
+      </Suspense>
+
+      <Suspense fallback={<SectionSkeleton />}>
+        <ServicesPreview />
+      </Suspense>
+
+      <Suspense fallback={<SectionSkeleton />}>
+        <HowWeWork />
+      </Suspense>
+
+      <Suspense fallback={<SectionSkeleton />}>
+        <ProjectShowcase />
+      </Suspense>
+
+      <Suspense fallback={<SectionSkeleton />}>
+        <Stats />
+      </Suspense>
+
+      <Suspense fallback={<SectionSkeleton />}>
+        <Testimonials />
+      </Suspense>
+
+      <Suspense fallback={<SectionSkeleton />}>
+        <FAQ />
+      </Suspense>
     </motion.div>
   )
 }

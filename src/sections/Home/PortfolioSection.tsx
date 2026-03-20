@@ -17,7 +17,7 @@ const portfolioItems = [
     description: 'Clean and modern brand identity for a tech startup.'
   },
   {
-    title: 'Urban Explorer App',
+    title: 'Full Stack Applications',
     category: 'Programming',
     image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80',
     icon: <Box className="w-5 h-5" />,
@@ -65,14 +65,14 @@ const PortfolioSection = () => {
           {portfolioItems.map((item, index) => (
             <motion.div
               key={item.title}
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.98 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.1 }}
-              viewport={{ once: true }}
+              transition={{ delay: index * 0.05, duration: 0.5 }}
+              viewport={{ once: true, margin: "-50px" }}
               className="group relative h-[450px] rounded-3xl overflow-hidden glass-card border-white/5"
             >
               <div 
-                className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-700"
+                className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-700"
                 style={{ backgroundImage: `url(${item.image})` }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
@@ -103,9 +103,9 @@ const PortfolioSection = () => {
         </div>
       </div>
 
-      {/* Background Glows */}
-      <div className="absolute top-1/2 -left-24 w-96 h-96 bg-mocha/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 -right-24 w-96 h-96 bg-purple-dark/10 rounded-full blur-[120px] pointer-events-none" />
+      {/* Background Glows - Reduced blur/opacity for performance */}
+      <div className="absolute top-1/2 -left-24 w-80 h-80 bg-mocha/5 rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute bottom-0 -right-24 w-80 h-80 bg-purple-dark/5 rounded-full blur-[80px] pointer-events-none" />
     </section>
   )
 }

@@ -1,6 +1,6 @@
-import { forwardRef } from 'react'
+import { forwardRef, useState } from 'react'
 import type { ReactNode } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import type { HTMLMotionProps } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
@@ -11,8 +11,30 @@ interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
   children?: ReactNode
 }
 
+interface Spark {
+  id: number
+  x: number
+  y: number
+}
+
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', isLoading, children, ...props }, ref) => {
+  ({ className, variant = 'primary', size = 'md', isLoading, children, onClick, ...props }, ref) => {
+    const [sparks, setSparks] = useState<Spark[]>([])
+
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect()
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+      
+      const newSpark = { id: Date.now(), x, y }
+      setSparks(prev => [...prev, newSpark])
+      setTimeout(() => {
+        setSparks(prev => prev.filter(s => s.id !== newSpark.id))
+      }, 600)
+
+      if (onClick) onClick(e as any)
+    }
+
     const variants: Record<string, string> = {
       primary: 'bg-mocha hover:bg-mocha-dark text-white',
       secondary: 'bg-purple-dark hover:bg-purple-brand text-white',
@@ -22,9 +44,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     }
 
     const sizes: Record<string, string> = {
-      sm: 'px-4 py-2 text-sm',
-      md: 'px-6 py-3 text-base font-semibold',
-      lg: 'px-8 py-4 text-lg font-bold',
+      sm: 'px-4 py-2 text-[12px] font-bold uppercase tracking-wider',
+      md: 'px-6 py-3 text-[14px] font-black uppercase tracking-widest',
+      lg: 'px-10 py-5 text-[16px] font-black uppercase tracking-[0.2em]',
     }
 
     return (
@@ -32,18 +54,41 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
+        onClick={handleClick}
         className={cn(
-          'inline-flex items-center justify-center rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed',
+          'inline-flex items-center justify-center rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden whitespace-nowrap gap-3',
           variants[variant] || variants.primary,
           sizes[size] || sizes.md,
           className
         )}
         {...props}
       >
+        <AnimatePresence>
+          {sparks.map(spark => (
+            <motion.div
+              key={spark.id}
+              initial={{ scale: 0, opacity: 0.8 }}
+              animate={{ scale: 4, opacity: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="absolute pointer-events-none rounded-full bg-white/30 z-0"
+              style={{
+                left: spark.x,
+                top: spark.y,
+                width: 20,
+                height: 20,
+                transform: 'translate(-50%, -50%)'
+              }}
+            />
+          ))}
+        </AnimatePresence>
+
         {isLoading ? (
-          <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-white shrink-0" />
         ) : null}
-        {children}
+        <span className="relative z-10 flex items-center justify-center gap-3">
+          {children}
+        </span>
       </motion.button>
     )
   }

@@ -1,40 +1,27 @@
 import { motion } from 'framer-motion'
-import { Video, Camera, Palette, Code, Layers, ArrowRight } from 'lucide-react'
+import { useState } from 'react'
+import { Video, Palette, Code, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import Button from '@/components/ui/Button'
 
 const services = [
   {
-    title: 'Video Editing',
-    description: 'Cinematic storytelling, YouTube edits, reels, shorts, and professional commercial color grading.',
+    title: 'Video Production',
+    description: 'Cinematic storytelling and professional video editing for all platforms.',
     icon: Video,
     color: 'from-blue-500 to-blue-700',
     link: '/services#video'
   },
   {
-    title: 'Photo Editing',
-    description: 'High-end retouching, restoration, color correction, and creative photo manipulations.',
-    icon: Camera,
-    color: 'from-purple-500 to-purple-700',
-    link: '/services#photo'
-  },
-  {
-    title: 'Graphic Design',
-    description: 'Social media assets, banners, marketing materials, and print-ready designs.',
+    title: 'Brand Identity',
+    description: 'Comprehensive design solutions to establish and elevate your visual presence.',
     icon: Palette,
     color: 'from-mocha to-mocha-dark',
     link: '/services#graphic'
   },
   {
-    title: 'Logo Design',
-    description: 'Minimalist logos, brand identity systems, and comprehensive business branding.',
-    icon: Layers,
-    color: 'from-amber-500 to-amber-700',
-    link: '/services#logo'
-  },
-  {
-    title: 'Web Development',
-    description: 'Modern, high-performance websites built with React, TypeScript, and the latest technologies.',
+    title: 'Web Engineering',
+    description: 'High-performance, modern web applications built for the next generation.',
     icon: Code,
     color: 'from-emerald-500 to-emerald-700',
     link: '/services#web'
@@ -42,6 +29,16 @@ const services = [
 ]
 
 const ServicesPreview = () => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    setMousePos({
+      x: ((e.clientX - rect.left) / rect.width) * 100,
+      y: ((e.clientY - rect.top) / rect.height) * 100
+    })
+  }
+
   return (
     <section className="py-20 bg-background relative overflow-hidden">
       <div className="container mx-auto px-6 md:px-12">
@@ -70,9 +67,18 @@ const ServicesPreview = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
+              onMouseMove={handleMouseMove}
               viewport={{ once: true }}
               className="group relative p-8 glass-card border border-white/5 hover:border-mocha/30 transition-all duration-500 overflow-hidden"
             >
+              {/* Glare Hover Effect */}
+              <div 
+                className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-20 transition-opacity duration-500 z-10"
+                style={{
+                  background: `radial-gradient(circle at ${mousePos.x}% ${mousePos.y}%, rgba(255,255,255,0.2) 0%, transparent 60%)`
+                }}
+              />
+
               {/* Background Glow */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-mocha/10 blur-[50px] -translate-y-1/2 translate-x-1/2 group-hover:opacity-100 opacity-0 transition-opacity" />
               

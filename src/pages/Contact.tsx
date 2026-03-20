@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send, Mail, Phone, MapPin, CheckCircle2, AlertCircle, Zap, Instagram, Twitter, Linkedin } from 'lucide-react'
@@ -64,8 +65,8 @@ const Contact = () => {
           Let's Create <span className="text-mocha">Something</span> <span className="text-gradient">Iconic</span>
         </h1>
         <p className="text-lg text-white/60 leading-relaxed max-w-2xl mx-auto">
-          Ready to elevate your brand with cinematic visuals and modern tech? 
-          Tell us about your project and let's bring your vision to life.
+          Have a general inquiry or want to discuss a partnership? We're here to help. 
+          For new project requests, please use our <Link to="/request-cinebit" className="text-mocha hover:underline font-bold">CineBit Portal</Link> for faster processing.
         </p>
       </section>
 

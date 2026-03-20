@@ -31,6 +31,8 @@ export default {
         'gradient-y': 'gradient-y 15s ease infinite',
         'gradient-xy': 'gradient-xy 15s ease infinite',
         'float': 'float 6s ease-in-out infinite',
+        'logo-loop': 'logo-loop 30s linear infinite',
+        'spin-slow': 'spin 10s linear infinite',
       },
       keyframes: {
         'gradient-y': {
@@ -70,6 +72,10 @@ export default {
           '50%': {
             transform: 'translateY(-20px)',
           },
+        },
+        'logo-loop': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
         }
       }
     },

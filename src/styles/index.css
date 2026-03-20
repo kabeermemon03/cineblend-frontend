@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
   :root {
     --mocha-mousse: #96694C;
     --dark-purple: #301934;
@@ -23,8 +27,8 @@
 
 @layer components {
   .glass-card {
-    @apply bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2rem];
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    @apply bg-white/[0.03] backdrop-blur-lg border border-white/5 rounded-[2rem];
+    box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.2);
   }
 
   .glass-morphism {

@@ -27,7 +27,7 @@ const portfolioItems = [
   },
   {
     id: 3,
-    title: 'Urban Explorer App',
+    title: 'Full Stack Applications',
     category: 'Web Development',
     image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80',
     description: 'A fully responsive, modern progressive web application built with React and Framer Motion for smooth interactions.',

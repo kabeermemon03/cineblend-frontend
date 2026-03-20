@@ -6,11 +6,11 @@ import { cn } from '@/lib/utils'
 const faqs = [
   {
     question: "What services do you offer exactly?",
-    answer: "We offer professional digital services including video editing (YouTube, cinematic, shorts), photo editing (retouching, color grading), logo design, graphic design (social media, branding assets), and web development using modern technologies like React and TypeScript."
+    answer: "We offer professional digital services including Video Production (YouTube, cinematic, shorts), Brand Identity (retouching, logo design, branding assets), and Web Engineering using modern technologies like React and TypeScript."
   },
   {
     question: "How long does a typical project take?",
-    answer: "The timeline depends on the complexity of the project. Video edits can take anywhere from 3 to 10 days, while a full branding package or custom web development project can take 4 to 8 weeks. We'll provide a clear timeline during our initial consultation."
+    answer: "The timeline depends on the complexity of the project. Video productions can take anywhere from 3 to 10 days, while a full Brand Identity or custom Web Engineering project can take 4 to 8 weeks. We'll provide a clear timeline during our initial consultation."
   },
   {
     question: "Can you handle ongoing work or retainers?",
@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     question: "How do we start a project?",
-    answer: "The easiest way is to click the 'Start a Project' button and fill out our contact form. We'll get back to you within 24-48 hours to schedule a discovery call and discuss your vision in more detail."
+    answer: "The easiest way is to click the 'Request a CineBit' button and fill out our portal form. We'll get back to you within 24-48 hours to discuss your vision in more detail."
   }
 ]
 
@@ -73,8 +73,8 @@ const FAQ = () => {
 
   return (
     <section className="py-20 bg-background relative overflow-hidden">
-      {/* Decorative Glow */}
-      <div className="absolute top-1/2 -right-40 w-80 h-80 bg-mocha/10 blur-[120px] rounded-full pointer-events-none" />
+      {/* Decorative Glow - Optimized */}
+      <div className="absolute top-1/2 -right-40 w-80 h-80 bg-mocha/5 blur-[80px] rounded-full pointer-events-none opacity-40" />
 
       <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10">
         <div className="text-center mb-16 space-y-4">
