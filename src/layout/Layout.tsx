@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import Navbar from '@/components/common/Navbar.tsx'
 import Footer from '@/components/common/Footer.tsx'
+import FloatingCTA from '@/components/ui/FloatingCTA'
 import { motion, useScroll, useSpring } from 'framer-motion'
 
 interface LayoutProps {
@@ -68,6 +69,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </main>
 
       <Footer />
+
+      <FloatingCTA />
 
       {/* Cursor Glow Effect */}
       <div 

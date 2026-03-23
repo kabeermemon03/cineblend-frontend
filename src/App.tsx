@@ -11,6 +11,8 @@ import Contact from '@/pages/Contact'
 import Login from '@/pages/Login'
 import Signup from '@/pages/Signup'
 import Dashboard from '@/pages/Dashboard'
+import AdminDashboard from '@/pages/AdminDashboard'
+import Onboarding from '@/pages/Onboarding'
 import Settings from '@/pages/Settings'
 import RequestCineBit from '@/pages/RequestCineBit'
 import Careers from '@/pages/Careers'
@@ -30,7 +32,7 @@ const LoadingFallback = () => (
 
 const App = () => {
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Preloader />
       <Toaster 
         position="top-right"
@@ -73,6 +75,8 @@ const App = () => {
             
             {/* Protected Routes */}
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="/request-cinebit" element={<ProtectedRoute><RequestCineBit /></ProtectedRoute>} />
             <Route path="/history" element={<ProtectedRoute><MyCineBits /></ProtectedRoute>} />

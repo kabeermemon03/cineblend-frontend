@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { Video, Palette, Code, ArrowRight, X, Play, CheckCircle } from 'lucide-react'
 import Button from '@/components/ui/Button'
+import BeforeAfterSlider from '@/components/ui/BeforeAfterSlider'
 
 const projects = [
   {
@@ -12,6 +13,8 @@ const projects = [
     outcome: 'Increased brand engagement by 45% and established a cohesive visual identity across platforms.',
     tools: ['Premiere Pro', 'After Effects', 'DaVinci Resolve'],
     image: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&q=80',
+    beforeImage: 'https://images.unsplash.com/photo-1533750349088-cd871a92f312?auto=format&fit=crop&q=80', // Unedited RAW
+    afterImage: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&q=80', // Edited Result
     video: 'https://www.w3schools.com/html/mov_bbb.mp4', // Placeholder
     icon: Video,
     color: 'text-blue-400'
@@ -138,21 +141,27 @@ const ProjectShowcase = () => {
                 <X className="w-6 h-6" />
               </button>
 
-              <div className="lg:w-1/2 relative bg-black">
-                {selectedProject.video ? (
+              <div className="lg:w-1/2 relative bg-[#050505] flex flex-col justify-center min-h-[500px] lg:min-h-0">
+                {selectedProject.beforeImage && selectedProject.afterImage ? (
+                  <BeforeAfterSlider 
+                    beforeImage={selectedProject.beforeImage} 
+                    afterImage={selectedProject.afterImage} 
+                    className="w-full h-full rounded-none"
+                  />
+                ) : selectedProject.video ? (
                   <video 
+                    src={selectedProject.video} 
+                    className="w-full h-full object-cover"
                     autoPlay 
-                    muted 
                     loop 
-                    className="w-full h-full object-cover opacity-60"
-                  >
-                    <source src={selectedProject.video} type="video/mp4" />
-                  </video>
+                    muted 
+                    playsInline 
+                  />
                 ) : (
                   <img src={selectedProject.image} alt="" className="w-full h-full object-cover opacity-60" />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
-                <div className="absolute bottom-12 left-12 space-y-4">
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80 pointer-events-none" />
+                <div className="absolute bottom-12 left-12 space-y-4 pointer-events-none">
                   <div className={`w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center ${selectedProject.color}`}>
                     <selectedProject.icon className="w-8 h-8" />
                   </div>

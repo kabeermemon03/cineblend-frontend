@@ -4,10 +4,11 @@ import { useAuthStore } from '@/store/authStore';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
+  requireAdmin?: boolean;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuthStore();
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requireAdmin = false }) => {
+  const { isAuthenticated, isLoading, user } = useAuthStore();
   const location = useLocation();
 
   if (isLoading) {
@@ -21,6 +22,22 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   if (!isAuthenticated) {
     // Redirect to login but save the current location they were trying to access
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // Handle Admin Access
+  if (requireAdmin && user?.role !== 'admin') {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  // Handle Onboarding Flow (Admins skip onboarding)
+  const isOnboardingPage = location.pathname === '/onboarding';
+
+  if (user && user.role !== 'admin' && !user.onboardingCompleted && !isOnboardingPage) {
+    return <Navigate to="/onboarding" replace />;
+  }
+
+  if (user && user.onboardingCompleted && isOnboardingPage) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;

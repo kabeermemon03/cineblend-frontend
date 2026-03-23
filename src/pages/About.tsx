@@ -266,12 +266,11 @@ const About = () => {
         <Hero />
 
         {/* 2. TRUSTED TOOLS */}
-        <section className="relative z-10 py-24 border-b border-white/5">
-          <div className="container mx-auto px-6 mb-12 text-center">
-            <p className="text-[10px] uppercase tracking-[0.6em] text-white/15 font-black">Powered by elite industry tools</p>
-          </div>
-          <LogoLoop speed={40} />
-        </section>
+        <LogoLoop 
+          speed={40} 
+          title="Our Production Toolkit" 
+          subtitle="A high-fidelity arsenal of industry-standard tools and modern frameworks designed for excellence."
+        />
 
         {/* 3. WHO WE ARE */}
         <WhoWeAre />

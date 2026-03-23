@@ -15,17 +15,25 @@ export interface Review {
 const reviewsService = {
   async getAll(): Promise<Review[]> {
     try {
-      const reviewsCollection = collection(db, 'reviews');
+      let reviewsCollection = collection(db, 'testimonials');
+      let querySnapshot;
       
-      // Fetch sorted by 'order' if the field exists, otherwise fetch unsorted
-      let q;
       try {
-        q = query(reviewsCollection, orderBy('order', 'asc'));
-      } catch (e) {
-        q = query(reviewsCollection);
+        const q = query(reviewsCollection, orderBy('order', 'asc'));
+        querySnapshot = await getDocs(q);
+      } catch (err: any) {
+        querySnapshot = await getDocs(reviewsCollection);
       }
 
-      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) {
+        reviewsCollection = collection(db, 'reviews');
+        try {
+          const q = query(reviewsCollection, orderBy('order', 'asc'));
+          querySnapshot = await getDocs(q);
+        } catch (err: any) {
+          querySnapshot = await getDocs(reviewsCollection);
+        }
+      }
 
       if (querySnapshot.empty) {
         return [];
@@ -37,18 +45,18 @@ const reviewsService = {
           id: doc.id,
           name: data.name || 'Anonymous Client',
           role: data.role || 'Valued Partner',
-          review: data.review || '',
-          imageUrl: data.imageUrl,
+          review: data.message || data.review || '',
+          imageUrl: data.image || data.imageUrl,
           rating: data.rating || 5,
           order: data.order ?? 999,
         } as Review;
       });
 
-      // Perform a final sort in the frontend for stability
       return reviews.sort((a, b) => (a.order || 999) - (b.order || 999));
 
     } catch (error: any) {
-      console.error("🔥 Firestore Error fetching reviews:", error);
+      // Keep errors for critical production monitoring, but clean up the verbose logs
+      console.error("🔥 Firestore Error fetching reviews:", error.code || error.message);
       throw new Error("Failed to load reviews from the database.");
     }
   },

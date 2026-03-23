@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Play, User as UserIcon, LogOut, History, Settings, LayoutDashboard, ChevronRight } from 'lucide-react'
+import { Menu, X, Play, User as UserIcon, LogOut, History, Settings, LayoutDashboard, ChevronRight, ShieldCheck } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Button from '@/components/ui/Button'
 import { useAuthStore } from '@/store/authStore'
@@ -34,6 +34,7 @@ const Navbar = () => {
 
   const sidebarLinks = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
+    ...(user?.role === 'admin' ? [{ name: 'Admin Panel', icon: ShieldCheck, path: '/admin' }] : []),
     { name: 'Request a CineBit', icon: Play, path: '/request-cinebit' },
     { name: 'My Requests', icon: History, path: '/history' },
     { name: 'Account Settings', icon: Settings, path: '/settings' },

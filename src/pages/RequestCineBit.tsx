@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { Send, CheckCircle, Zap, Video, Palette, Code, Upload } from 'lucide-react'
-import { cinebitsService } from '@/lib/firebase-services'
+import { cinebitsService, adminService } from '@/lib/firebase-services'
 import { useAuthStore } from '@/store/authStore'
 import Button from '@/components/ui/Button'
 
@@ -11,9 +11,22 @@ const RequestCineBit = () => {
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const { register, handleSubmit, formState: { errors } } = useForm()
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm()
   const navigate = useNavigate()
   const { user } = useAuthStore()
+
+  // Load preferences
+  useEffect(() => {
+    const savedPrefs = localStorage.getItem(`prefs_${user?.uid}`);
+    if (savedPrefs) {
+      try {
+        const prefs = JSON.parse(savedPrefs);
+        if (prefs.lastService) setValue('service_type', prefs.lastService);
+      } catch (e) {
+        console.error('Error loading preferences:', e);
+      }
+    }
+  }, [user, setValue]);
 
   const services = [
     { id: 'video_production', name: 'Video Production', icon: <Video className="w-5 h-5" /> },
@@ -26,14 +39,31 @@ const RequestCineBit = () => {
     setLoading(true)
     setError(null)
     
+    // Save preference
+    localStorage.setItem(`prefs_${user.uid}`, JSON.stringify({
+      lastService: data.service_type,
+      updatedAt: new Date().toISOString()
+    }));
+    
     try {
       await cinebitsService.create({
         userId: user.uid,
         userEmail: user.email,
+        userName: user.displayName,
         serviceType: data.service_type,
         projectTitle: data.title,
         description: data.description,
       })
+
+      // Trigger Email Notification
+      await adminService.emailService.send('new_request', {
+        clientName: user.displayName,
+        clientEmail: user.email,
+        serviceType: data.service_type,
+        projectTitle: data.title,
+        description: data.description,
+      });
+
       setStep(2)
     } catch (err: any) {
       console.error('Error submitting request:', err)

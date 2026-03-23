@@ -10,6 +10,9 @@ const Showreel = lazy(() => import('@/sections/Home/Showreel.tsx'))
 const Testimonials = lazy(() => import('@/sections/Home/Testimonials.tsx'))
 const Stats = lazy(() => import('@/sections/Home/Stats.tsx'))
 const FAQ = lazy(() => import('@/sections/Home/FAQ.tsx'))
+const ComparisonSection = lazy(() => import('@/sections/Home/ComparisonSection.tsx'))
+const CaseStudiesSection = lazy(() => import('@/sections/Home/CaseStudiesSection.tsx'))
+const TestimonialsSlider = lazy(() => import('@/sections/Home/TestimonialsSlider.tsx'))
 
 // Loading Skeleton for sections
 const SectionSkeleton = () => (
@@ -46,11 +49,23 @@ const Home = () => {
       </Suspense>
 
       <Suspense fallback={<SectionSkeleton />}>
+        <ComparisonSection />
+      </Suspense>
+
+      <Suspense fallback={<SectionSkeleton />}>
+        <CaseStudiesSection />
+      </Suspense>
+
+      <Suspense fallback={<SectionSkeleton />}>
         <Stats />
       </Suspense>
 
       <Suspense fallback={<SectionSkeleton />}>
         <Testimonials />
+      </Suspense>
+
+      <Suspense fallback={<SectionSkeleton />}>
+        <TestimonialsSlider />
       </Suspense>
 
       <Suspense fallback={<SectionSkeleton />}>

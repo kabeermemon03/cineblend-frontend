@@ -6,6 +6,8 @@ interface User {
   displayName: string | null
   email: string | null
   photoURL: string | null
+  onboardingCompleted?: boolean
+  role?: 'admin' | 'client'
 }
 
 interface AuthState {
@@ -14,6 +16,7 @@ interface AuthState {
   isLoading: boolean
   setAuth: (user: User | null) => void
   setLoading: (loading: boolean) => void
+  setOnboardingStatus: (completed: boolean) => void
   logout: () => void
 }
 
@@ -25,6 +28,9 @@ export const useAuthStore = create<AuthState>()(
       isLoading: true,
       setAuth: (user) => set({ user, isAuthenticated: !!user, isLoading: false }),
       setLoading: (loading) => set({ isLoading: loading }),
+      setOnboardingStatus: (completed) => set((state) => ({
+        user: state.user ? { ...state.user, onboardingCompleted: completed } : null
+      })),
       logout: () => set({ user: null, isAuthenticated: false, isLoading: false }),
     }),
     {

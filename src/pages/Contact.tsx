@@ -86,8 +86,8 @@ const Contact = () => {
             <div className="space-y-8">
               {[
                 { icon: Mail, label: 'Email', value: 'hello@cineblendstudios.com', href: 'mailto:hello@cineblendstudios.com' },
-                { icon: Phone, label: 'Phone', value: '+1 (555) 000-0000', href: 'tel:+15550000000' },
-                { icon: MapPin, label: 'Studio', value: '123 Creative Blvd, Digital City, CA 90210', href: '#' }
+                { icon: Phone, label: 'Phone', value: '+92 337 2585944', href: 'https://wa.me/923372585944' },
+                { icon: MapPin, label: 'Studio', value: 'Karachi, Pakistan', href: '#' }
               ].map((info) => (
                 <a 
                   key={info.label} 

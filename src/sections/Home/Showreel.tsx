@@ -62,12 +62,15 @@ const Showreel = () => {
           </div>
 
           {/* Video Container */}
-          <motion.div
+          <motion.a
+            href="https://res.cloudinary.com/davrdrqs6/video/upload/v1774277162/LOUCURA_LETAL_Slowed_-_SUKA-_ry3uzg.mp4"
+            target="_blank"
+            rel="noopener noreferrer"
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
-            className="relative group aspect-video rounded-[4rem] overflow-hidden glass-card border-white/5 bg-white/[0.02] backdrop-blur-3xl shadow-2xl"
+            className="relative group aspect-video rounded-[4rem] overflow-hidden glass-card border-white/5 bg-white/[0.02] backdrop-blur-3xl shadow-2xl cursor-pointer block"
           >
             <div className="absolute inset-0 z-10 bg-black/40 group-hover:bg-black/20 transition-all duration-700" />
             
@@ -78,14 +81,14 @@ const Showreel = () => {
               playsInline
               className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 ease-out scale-105 group-hover:scale-100"
             >
-              <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+              <source src="https://res.cloudinary.com/davrdrqs6/video/upload/v1774277162/LOUCURA_LETAL_Slowed_-_SUKA-_ry3uzg.mp4" type="video/mp4" />
             </video>
 
             {/* Play Button Overlay */}
             <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
               <motion.div
                 whileHover={{ scale: 1.1 }}
-                className="w-24 h-24 rounded-full bg-mocha/20 backdrop-blur-3xl border border-white/10 flex items-center justify-center text-white group-hover:bg-mocha/40 transition-all duration-700"
+                className="w-24 h-24 rounded-full bg-mocha/20 backdrop-blur-3xl border border-white/10 flex items-center justify-center text-white group-hover:bg-mocha/40 group-hover:scale-110 transition-all duration-700"
               >
                 <Play className="w-8 h-8 fill-white" />
               </motion.div>
@@ -101,7 +104,7 @@ const Showreel = () => {
               </div>
               <span className="text-[10px] font-black uppercase tracking-widest text-white/30">Duration: 1:45</span>
             </div>
-          </motion.div>
+          </motion.a>
         </div>
       </div>
     </section>

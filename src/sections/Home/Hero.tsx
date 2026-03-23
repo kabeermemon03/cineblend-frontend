@@ -67,23 +67,14 @@ const Hero = () => {
         <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-purple-dark/20 rounded-full blur-[100px] pointer-events-none opacity-30" />
       </section>
 
-      {/* Tech Stack Loop - Consolidated with LogoLoop */}
-      <section className="py-24 bg-background relative overflow-hidden border-y border-white/5">
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8 }}
-          className="w-full"
-        >
-          <div className="container mx-auto px-6 mb-12 text-center">
-            <p className="text-[10px] font-black uppercase tracking-[0.6em] text-white/15">
-              Forging digital experiences with elite tools
-            </p>
-          </div>
-          <LogoLoop speed={35} />
-        </motion.div>
-      </section>
+      {/* Tech Stack Loop - Enhanced and Consolidated */}
+      <LogoLoop 
+        speed={35} 
+        title="Our Elite Tech Stack" 
+        subtitle="We leverage the world's most powerful technologies to craft high-performance digital solutions and cinematic content."
+        showTitle={true} 
+        className="bg-black" 
+      />
     </>
   )
 }

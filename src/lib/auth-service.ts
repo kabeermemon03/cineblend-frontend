@@ -49,6 +49,19 @@ export const authService = {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await this.syncUserToFirestore(userCredential.user);
+      
+      // Trigger Email Notification for new signup
+      try {
+        const { adminService } = await import('./firebase-services');
+        await adminService.emailService.send('new_signup', {
+          userName: userCredential.user.displayName || 'New User',
+          email: userCredential.user.email,
+          role: 'client'
+        });
+      } catch (e) {
+        console.error('Failed to send signup email:', e);
+      }
+
       return { user: userCredential.user, error: null };
     } catch (error) {
       return { user: null, error: error as AuthError };
@@ -137,7 +150,7 @@ export const authService = {
     }
   },
 
-  // Log out the current user
+  // Logout
   async logout() {
     try {
       await signOut(auth);
@@ -147,7 +160,7 @@ export const authService = {
     }
   },
 
-  // Helper to get readable error messages
+  // Get error message from Firebase Auth error
   getErrorMessage(error: AuthError): string {
     switch (error.code) {
       case 'auth/email-already-in-use':
@@ -166,8 +179,10 @@ export const authService = {
         return 'Login popup was closed. Please try again.';
       case 'auth/account-exists-with-different-credential':
         return 'An account already exists with the same email address but different sign-in credentials.';
+      case 'auth/requires-recent-login':
+        return 'Please log in again to update security settings.';
       default:
-        return 'An unexpected error occurred. Please try again.';
+        return error.message || 'An unexpected error occurred. Please try again.';
     }
   }
 };
