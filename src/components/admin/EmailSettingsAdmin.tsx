@@ -1,12 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Settings,
-  Mail,
-  ShieldCheck,
-  CheckCircle2,
-  XCircle,
-  AlertTriangle
-} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Settings, Mail, ShieldCheck, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { adminService } from '@/lib/firebase-services';
 import Button from '@/components/ui/Button';
 import { cn } from '@/lib/utils';

@@ -1,26 +1,10 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  LayoutDashboard, 
-  Users, 
-  Briefcase, 
-  Users2, 
-  MessageSquare, 
-  RefreshCcw, 
-  Bell, 
-  FileText, 
-  LogOut, 
-  Menu, 
-  X,
-  Settings as SettingsIcon,
-  Mail,
-  RotateCcw
-} from 'lucide-react';
+import { LayoutDashboard, Users, Briefcase, Users2, MessageSquare, RefreshCcw, Bell, FileText, LogOut, Menu, X, Mail, RotateCcw } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { useNavigate } from 'react-router-dom';
 import { adminService } from '@/lib/firebase-services';
 import { SidebarItem } from '@/components/admin/Common';
-import { cn } from '@/lib/utils';
 
 // --- Lazy Load Sections ---
 const Overview = lazy(() => import('@/components/admin/Overview').then(m => ({ default: m.Overview })));

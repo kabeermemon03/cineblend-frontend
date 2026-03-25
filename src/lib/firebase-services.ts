@@ -417,6 +417,11 @@ export const adminService = {
     return deleteDoc(docRef);
   },
 
+  updateDeliverable: async (id: string, data: any) => {
+    const docRef = doc(db, 'deliverables', id);
+    return updateDoc(docRef, { ...data, updatedAt: serverTimestamp() });
+  },
+
   // Contact Messages Admin
   getAllMessages: (callback: (data: any[]) => void) => {
     const q = query(collection(db, 'messages'), orderBy('createdAt', 'desc'));
@@ -433,6 +438,18 @@ export const adminService = {
   deleteMessage: async (id: string) => {
     const docRef = doc(db, 'messages', id);
     return deleteDoc(docRef);
+  },
+
+  // Email Notification Settings (Firestore-backed)
+  getEmailSettings: async () => {
+    const docRef = doc(db, 'settings', 'email_notifications');
+    const snap = await getDoc(docRef);
+    return snap.exists() ? snap.data() : null;
+  },
+
+  updateEmailSettings: async (settings: any) => {
+    const docRef = doc(db, 'settings', 'email_notifications');
+    return setDoc(docRef, { ...settings, updatedAt: serverTimestamp() }, { merge: true });
   },
 
   // Email Notification Services (Backend Integration)

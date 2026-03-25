@@ -1,10 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Plus,
-  Trash2,
-  Edit2,
-  X
-} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Plus, Trash2, X } from 'lucide-react';
 import { adminService } from '@/lib/firebase-services';
 import Button from '@/components/ui/Button';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -50,7 +45,7 @@ export const TeamManagement = () => {
   });
 
   useEffect(() => {
-    const unsubscribe = adminService.getTeam((data) => {
+    const unsubscribe = adminService.getAllTeam((data) => {
       setTeam(data);
     });
     return () => unsubscribe();
@@ -60,10 +55,10 @@ export const TeamManagement = () => {
     e.preventDefault();
     try {
       if (editingMember) {
-        await adminService.updateTeamMember(editingMember.id, formData);
+        await adminService.updateTeamMember(editingMember.id, formData, formData.isFounder);
         toast.success('Member updated');
       } else {
-        await adminService.addTeamMember(formData);
+        await adminService.addTeamMember(formData, formData.isFounder);
         toast.success('Member added');
       }
       setIsModalOpen(false);
@@ -77,7 +72,7 @@ export const TeamManagement = () => {
   const handleDelete = async (id: string) => {
     if (!window.confirm('Delete member?')) return;
     try {
-      await adminService.deleteTeamMember(id);
+      await adminService.deleteTeamMember(id, team.find(m => m.id === id)?.isFounder ?? false);
       toast.success('Member removed');
     } catch (error) {
       toast.error('Delete failed');

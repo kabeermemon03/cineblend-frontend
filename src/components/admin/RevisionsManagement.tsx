@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  RefreshCcw,
-  X
-} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
 import { adminService } from '@/lib/firebase-services';
 import Button from '@/components/ui/Button';
 import { motion, AnimatePresence } from 'framer-motion';

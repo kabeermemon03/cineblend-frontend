@@ -1,13 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  Users, 
-  Briefcase, 
-  RefreshCcw, 
-  CheckCircle2,
-  Clock,
-  Bell
-} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Users, Briefcase, RefreshCcw, CheckCircle2, Clock, Bell } from 'lucide-react';
 import { adminService } from '@/lib/firebase-services';
 import Button from '@/components/ui/Button';
 import { format } from 'date-fns';

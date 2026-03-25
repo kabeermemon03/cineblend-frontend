@@ -1,13 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Plus,
-  Trash2,
-  Edit2,
-  Search,
-  RotateCcw,
-  X,
-  FileText
-} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import type { FormEvent } from 'react';
+import { Plus, Trash2, Edit2, Search, RotateCcw, X, FileText } from 'lucide-react';
 import { adminService } from '@/lib/firebase-services';
 import Button from '@/components/ui/Button';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -44,7 +37,7 @@ export const DeliverablesManagement = () => {
     };
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
       if (editingDeliverable) {
