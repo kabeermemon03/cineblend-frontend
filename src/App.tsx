@@ -2,26 +2,26 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Toaster } from 'react-hot-toast'
 import { lazy, Suspense } from 'react'
 import Layout from '@/layout/Layout'
-import Home from '@/pages/Home'
-import About from '@/pages/About'
-import Services from '@/pages/Services'
-import Pricing from '@/pages/Pricing'
-import Portfolio from '@/pages/Portfolio'
-import Contact from '@/pages/Contact'
-import Login from '@/pages/Login'
-import Signup from '@/pages/Signup'
-import Dashboard from '@/pages/Dashboard'
-import AdminDashboard from '@/pages/AdminDashboard'
-import Onboarding from '@/pages/Onboarding'
-import Settings from '@/pages/Settings'
-import RequestCineBit from '@/pages/RequestCineBit'
-import Careers from '@/pages/Careers'
-import MyCineBits from '@/pages/MyCineBits'
 import { AuthStateListener } from '@/components/auth/AuthStateListener'
 import ProtectedRoute from '@/components/auth/ProtectedRoute'
 import Preloader from '@/components/ui/Preloader'
 
-// Lazy load profile page for performance
+// Lazy load all pages for maximum performance and code splitting
+const Home = lazy(() => import('@/pages/Home'))
+const About = lazy(() => import('@/pages/About'))
+const Services = lazy(() => import('@/pages/Services'))
+const Pricing = lazy(() => import('@/pages/Pricing'))
+const Portfolio = lazy(() => import('@/pages/Portfolio'))
+const Contact = lazy(() => import('@/pages/Contact'))
+const Login = lazy(() => import('@/pages/Login'))
+const Signup = lazy(() => import('@/pages/Signup'))
+const Dashboard = lazy(() => import('@/pages/Dashboard'))
+const AdminDashboard = lazy(() => import('@/pages/AdminDashboard'))
+const Onboarding = lazy(() => import('@/pages/Onboarding'))
+const Settings = lazy(() => import('@/pages/Settings'))
+const RequestCineBit = lazy(() => import('@/pages/RequestCineBit'))
+const Careers = lazy(() => import('@/pages/Careers'))
+const MyCineBits = lazy(() => import('@/pages/MyCineBits'))
 const TeamProfile = lazy(() => import('@/pages/TeamProfile'))
 
 const LoadingFallback = () => (

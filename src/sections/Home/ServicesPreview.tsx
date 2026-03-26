@@ -60,7 +60,7 @@ const ServicesPreview = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {services.map((service, index) => (
             <motion.div
               key={service.title}
@@ -69,7 +69,7 @@ const ServicesPreview = () => {
               transition={{ delay: index * 0.1 }}
               onMouseMove={handleMouseMove}
               viewport={{ once: true }}
-              className="group relative p-8 glass-card border border-white/5 hover:border-mocha/30 transition-all duration-500 overflow-hidden"
+              className="group relative p-6 md:p-8 glass-card border border-white/5 hover:border-mocha/30 transition-all duration-500 overflow-hidden"
             >
               {/* Glare Hover Effect */}
               <div 

@@ -1,75 +1,59 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ExternalLink, X, ArrowRight, Zap, Filter } from 'lucide-react'
+import { ExternalLink, X, ArrowRight, Zap, Filter, Loader2, Briefcase } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
+import { adminService } from '@/lib/firebase-services'
 
-const categories = ['All', 'Video Editing', 'Graphic Design', 'Web Development', 'Logo Design']
+const categories = ['All', 'Web Development', 'Video Editing', 'Graphics', 'Other']
 
-const portfolioItems = [
-  {
-    id: 1,
-    title: 'Neon Nights Cinematic',
-    category: 'Video Editing',
-    image: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&q=80',
-    description: 'A high-energy cinematic montage showcasing urban nightlife with advanced color grading and sound design.',
-    tools: ['Adobe Premiere Pro', 'After Effects', 'DaVinci Resolve'],
-    client: 'Urban Explorers'
-  },
-  {
-    id: 2,
-    title: 'Modern Minimal Branding',
-    category: 'Graphic Design',
-    image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&q=80',
-    description: 'Complete visual identity system for a tech startup, focusing on minimalist aesthetics and powerful typography.',
-    tools: ['Adobe Illustrator', 'Photoshop', 'Figma'],
-    client: 'CloudNine Tech'
-  },
-  {
-    id: 3,
-    title: 'Full Stack Applications',
-    category: 'Web Development',
-    image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80',
-    description: 'A fully responsive, modern progressive web application built with React and Framer Motion for smooth interactions.',
-    tools: ['React', 'TypeScript', 'Tailwind CSS', 'Framer Motion'],
-    client: 'Venture Labs'
-  },
-  {
-    id: 4,
-    title: 'Creative Agency Logo',
-    category: 'Logo Design',
-    image: 'https://images.unsplash.com/photo-1572044162444-ad60f128bde2?auto=format&fit=crop&q=80',
-    description: 'A unique, versatile logo design that combines geometric precision with artistic flair.',
-    tools: ['Adobe Illustrator'],
-    client: 'Studio X'
-  },
-  {
-    id: 5,
-    title: 'Mountain Peaks Documentary',
-    category: 'Video Editing',
-    image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80',
-    description: 'Breath-taking cinematic documentary edit focusing on the majesty of mountain landscapes.',
-    tools: ['Adobe Premiere Pro', 'After Effects'],
-    client: 'Nature Channel'
-  },
-  {
-    id: 6,
-    title: 'Social Media Kit',
-    category: 'Graphic Design',
-    image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80',
-    description: 'Cohesive set of social media assets designed to boost engagement and brand awareness.',
-    tools: ['Photoshop', 'Canva Pro', 'Illustrator'],
-    client: 'Influence Media'
-  }
-]
+interface PortfolioItem {
+  id: string;
+  title: string;
+  category: string;
+  image: string;
+  description: string;
+  tools?: string[];
+  tech?: string; // Some might use tech instead of tools
+  client?: string;
+  link?: string;
+  createdAt?: any;
+}
 
 const Portfolio = () => {
   const [activeCategory, setActiveCategory] = useState('All')
-  const [selectedProject, setSelectedProject] = useState<typeof portfolioItems[0] | null>(null)
+  const [selectedProject, setSelectedProject] = useState<PortfolioItem | null>(null)
+  const [projects, setProjects] = useState<PortfolioItem[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    setIsLoading(true)
+    const unsubscribe = adminService.getAllProjects((data) => {
+      try {
+        setProjects(data as PortfolioItem[])
+        setIsLoading(false)
+        setError(null)
+      } catch (err) {
+        console.error('Error fetching projects:', err)
+        setError('Failed to load projects. Please try again later.')
+        setIsLoading(false)
+      }
+    })
+
+    return () => unsubscribe()
+  }, [])
 
   const filteredItems = activeCategory === 'All' 
-    ? portfolioItems 
-    : portfolioItems.filter(item => item.category === activeCategory)
+    ? projects 
+    : projects.filter(item => item.category === activeCategory)
+
+  // Extract tools/tech array safely
+  const getTools = (item: PortfolioItem) => {
+    if (item.tools && Array.isArray(item.tools)) return item.tools;
+    if (item.tech) return item.tech.split(',').map(t => t.trim());
+    return [];
+  }
 
   return (
     <motion.div
@@ -121,52 +105,77 @@ const Portfolio = () => {
       </section>
 
       {/* Portfolio Grid */}
-      <section className="container mx-auto px-6 md:px-12">
-        <motion.div 
-          layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          <AnimatePresence mode="popLayout">
-            {filteredItems.map((item) => (
-              <motion.div
-                key={item.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.5 }}
-                className="group relative h-[400px] rounded-3xl overflow-hidden glass-card border-white/5 cursor-pointer"
-                onClick={() => setSelectedProject(item)}
-              >
-                {/* Project Image */}
-                <div 
-                  className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-1000 ease-out grayscale group-hover:grayscale-0"
-                  style={{ backgroundImage: `url(${item.image})` }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+      <section className="container mx-auto px-6 md:px-12 min-h-[400px]">
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-20 space-y-4">
+            <Loader2 className="w-12 h-12 text-mocha animate-spin" />
+            <p className="text-white/40 font-bold uppercase tracking-widest animate-pulse">Loading Projects...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-20 space-y-6">
+            <p className="text-red-400 text-lg">{error}</p>
+            <Button variant="ghost" onClick={() => window.location.reload()}>Try Again</Button>
+          </div>
+        ) : filteredItems.length === 0 ? (
+          <div className="text-center py-20 space-y-6 bg-white/[0.02] border border-white/5 rounded-[3rem]">
+            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Briefcase className="w-8 h-8 text-white/20" />
+            </div>
+            <h3 className="text-2xl font-bold text-white/60">No Projects Found</h3>
+            <p className="text-white/40 max-w-md mx-auto">
+              We haven't added any projects to this category yet. Check back soon for new masterpieces!
+            </p>
+            {activeCategory !== 'All' && (
+              <Button variant="ghost" onClick={() => setActiveCategory('All')}>Show All Projects</Button>
+            )}
+          </div>
+        ) : (
+          <motion.div 
+            layout
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            <AnimatePresence mode="popLayout">
+              {filteredItems.map((item) => (
+                <motion.div
+                  key={item.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.5 }}
+                  className="group relative h-[400px] rounded-3xl overflow-hidden glass-card border-white/5 cursor-pointer"
+                  onClick={() => setSelectedProject(item)}
+                >
+                  {/* Project Image */}
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-1000 ease-out grayscale group-hover:grayscale-0"
+                    style={{ backgroundImage: `url(${item.image})` }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
 
-                {/* Content Overlay */}
-                <div className="absolute inset-0 p-8 flex flex-col justify-end">
-                  <div className="space-y-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    <span className="inline-block px-3 py-1 rounded-full bg-mocha/20 text-mocha border border-mocha/30 text-[10px] font-bold uppercase tracking-widest backdrop-blur-md">
-                      {item.category}
-                    </span>
-                    <h3 className="text-2xl font-bold text-white group-hover:text-mocha transition-colors">
-                      {item.title}
-                    </h3>
-                    <div className="flex items-center text-sm text-white/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                      View Project Details
-                      <ArrowRight className="ml-2 w-4 h-4" />
+                  {/* Content Overlay */}
+                  <div className="absolute inset-0 p-8 flex flex-col justify-end">
+                    <div className="space-y-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                      <span className="inline-block px-3 py-1 rounded-full bg-mocha/20 text-mocha border border-mocha/30 text-[10px] font-bold uppercase tracking-widest backdrop-blur-md">
+                        {item.category}
+                      </span>
+                      <h3 className="text-2xl font-bold text-white group-hover:text-mocha transition-colors">
+                        {item.title}
+                      </h3>
+                      <div className="flex items-center text-sm text-white/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                        View Project Details
+                        <ArrowRight className="ml-2 w-4 h-4" />
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Hover Glow */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-mocha/20 blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
+                  {/* Hover Glow */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-mocha/20 blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        )}
       </section>
 
       {/* Project Detail Modal */}
@@ -200,14 +209,6 @@ const Portfolio = () => {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="aspect-square rounded-2xl overflow-hidden border border-white/10">
-                      <img src={selectedProject.image} className="w-full h-full object-cover opacity-50 grayscale" />
-                    </div>
-                    <div className="aspect-square rounded-2xl overflow-hidden border border-white/10">
-                      <img src={selectedProject.image} className="w-full h-full object-cover opacity-50 grayscale" />
-                    </div>
-                  </div>
                 </div>
 
                 <div className="space-y-10">
@@ -230,31 +231,39 @@ const Portfolio = () => {
                   <div className="grid grid-cols-2 gap-8 py-8 border-y border-white/5">
                     <div className="space-y-2">
                       <h4 className="text-sm font-bold uppercase tracking-widest text-white/40">Client</h4>
-                      <p className="text-white font-bold">{selectedProject.client}</p>
+                      <p className="text-white font-bold">{selectedProject.client || 'CineBlend Partner'}</p>
                     </div>
                     <div className="space-y-2">
-                      <h4 className="text-sm font-bold uppercase tracking-widest text-white/40">Year</h4>
-                      <p className="text-white font-bold">2024</p>
+                      <h4 className="text-sm font-bold uppercase tracking-widest text-white/40">Date</h4>
+                      <p className="text-white font-bold">
+                        {selectedProject.createdAt?.toDate ? selectedProject.createdAt.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : 'Recent Project'}
+                      </p>
                     </div>
                   </div>
 
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-bold uppercase tracking-widest text-white/40">Tools Used</h4>
-                    <div className="flex flex-wrap gap-3">
-                      {selectedProject.tools.map((tool) => (
-                        <span key={tool} className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-medium text-white/80">
-                          {tool}
-                        </span>
-                      ))}
+                  {getTools(selectedProject).length > 0 && (
+                    <div className="space-y-4">
+                      <h4 className="text-sm font-bold uppercase tracking-widest text-white/40">Tools & Tech</h4>
+                      <div className="flex flex-wrap gap-3">
+                        {getTools(selectedProject).map((tool) => (
+                          <span key={tool} className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-medium text-white/80">
+                            {tool}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
 
-                  <div className="pt-6">
-                    <Button variant="glow" size="lg" className="w-full sm:w-auto">
-                      View Full Project
-                      <ExternalLink className="ml-2 w-5 h-5" />
-                    </Button>
-                  </div>
+                  {selectedProject.link && (
+                    <div className="pt-6">
+                      <a href={selectedProject.link} target="_blank" rel="noopener noreferrer">
+                        <Button variant="glow" size="lg" className="w-full sm:w-auto">
+                          View Project
+                          <ExternalLink className="ml-2 w-5 h-5" />
+                        </Button>
+                      </a>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>

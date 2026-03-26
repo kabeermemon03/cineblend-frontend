@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -10,11 +10,11 @@ interface SidebarItemProps {
   onClick: () => void;
 }
 
-export const SidebarItem = ({ icon: Icon, label, active, onClick }: SidebarItemProps) => (
+export const SidebarItem = memo(({ icon: Icon, label, active, onClick }: SidebarItemProps) => (
   <button
     onClick={onClick}
     className={cn(
-      "w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-500 group relative overflow-hidden",
+      "w-full flex items-center gap-4 px-6 py-4 rounded-[1.5rem] transition-all duration-500 group relative overflow-hidden",
       active 
         ? "bg-mocha text-white shadow-[0_10px_30px_-10px_rgba(183,148,110,0.4)]" 
         : "text-white/40 hover:text-white hover:bg-white/5"
@@ -30,7 +30,7 @@ export const SidebarItem = ({ icon: Icon, label, active, onClick }: SidebarItemP
     <Icon size={20} className={cn("relative z-10 transition-all duration-500", active ? "text-white scale-110" : "text-white/40 group-hover:text-white group-hover:scale-110")} />
     <span className="relative z-10 text-[10px] font-black uppercase tracking-[0.2em]">{label}</span>
   </button>
-);
+));
 
 interface StatCardProps {
   label: string;
@@ -40,7 +40,7 @@ interface StatCardProps {
   color: string;
 }
 
-export const StatCard = ({ label, value, icon: Icon, trend, color }: StatCardProps) => (
+export const StatCard = memo(({ label, value, icon: Icon, trend, color }: StatCardProps) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -65,4 +65,4 @@ export const StatCard = ({ label, value, icon: Icon, trend, color }: StatCardPro
       </div>
     </div>
   </motion.div>
-);
+));

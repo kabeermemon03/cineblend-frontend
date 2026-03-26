@@ -41,6 +41,9 @@ export const AuthStateListener = () => {
               role: 'client',
             });
           }
+        }, (error) => {
+          console.error("Auth Profile Sync Error:", error);
+          setLoading(false);
         });
       } else {
         // User is signed out

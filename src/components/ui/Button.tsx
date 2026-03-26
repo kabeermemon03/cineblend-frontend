@@ -1,4 +1,4 @@
-import { forwardRef, useState } from 'react'
+import { forwardRef, useState, memo } from 'react'
 import type { ReactNode } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { HTMLMotionProps } from 'framer-motion'
@@ -17,11 +17,14 @@ interface Spark {
   y: number
 }
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = memo(forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, children, onClick, ...props }, ref) => {
     const [sparks, setSparks] = useState<Spark[]>([])
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      // Reduce spark calculations on low-end devices/fast clicks
+      if (sparks.length > 5) return;
+      
       const rect = e.currentTarget.getBoundingClientRect()
       const x = e.clientX - rect.left
       const y = e.clientY - rect.top
@@ -54,6 +57,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
+        // Use layoutId or layout for smooth transitions if needed, but keeping it simple for perf
         onClick={handleClick}
         className={cn(
           'inline-flex items-center justify-center rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden whitespace-nowrap gap-3',
@@ -63,14 +67,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         {...props}
       >
-        <AnimatePresence>
+        <AnimatePresence mode="popLayout">
           {sparks.map(spark => (
             <motion.div
               key={spark.id}
               initial={{ scale: 0, opacity: 0.8 }}
               animate={{ scale: 4, opacity: 0 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
+              transition={{ duration: 0.4, ease: "easeOut" }} // Shortened duration for snappier feel
               className="absolute pointer-events-none rounded-full bg-white/30 z-0"
               style={{
                 left: spark.x,
@@ -92,7 +96,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       </motion.button>
     )
   }
-)
+))
 
 Button.displayName = 'Button'
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Play, User as UserIcon, LogOut, History, Settings, LayoutDashboard, ChevronRight, ShieldCheck } from 'lucide-react'
@@ -8,7 +8,7 @@ import { useAuthStore } from '@/store/authStore'
 import { auth } from '@/lib/firebase'
 import { signOut } from 'firebase/auth'
 
-const Navbar = () => {
+const Navbar = memo(() => {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [showSidebar, setShowSidebar] = useState(false)
@@ -17,11 +17,17 @@ const Navbar = () => {
   const { user, isAuthenticated } = useAuthStore()
 
   useEffect(() => {
+    let rafId: number;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
+      rafId = requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 20)
+      });
     }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      cancelAnimationFrame(rafId);
+    }
   }, [])
 
   const navLinks = [
@@ -176,61 +182,103 @@ const Navbar = () => {
         {/* Mobile Menu */}
         <AnimatePresence>
           {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="md:hidden absolute top-full left-0 right-0 bg-background/98 backdrop-blur-2xl border-b border-white/10 overflow-hidden shadow-2xl"
-            >
-              <div className="flex flex-col p-8 space-y-6">
-                {navLinks.map((link, idx) => (
-                  <motion.div
-                    key={link.name}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 * idx }}
-                  >
-                    <Link
-                      to={link.path}
-                      onClick={() => setIsOpen(false)}
-                      className={cn(
-                        'text-2xl font-bold tracking-tight transition-colors flex items-center justify-between group',
-                        isActive(link.path) ? 'text-mocha' : 'text-white/60 hover:text-white'
-                      )}
+            <>
+              {/* Backdrop for Mobile Menu */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsOpen(false)}
+                className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[-1]"
+              />
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="md:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-3xl border-b border-white/10 overflow-hidden shadow-2xl"
+              >
+                <div className="flex flex-col p-8 space-y-6 max-h-[80vh] overflow-y-auto custom-scrollbar">
+                  {navLinks.map((link, idx) => (
+                    <motion.div
+                      key={link.name}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 * idx }}
                     >
-                      {link.name}
-                      <motion.div
-                        animate={{ x: isActive(link.path) ? 0 : -10, opacity: isActive(link.path) ? 1 : 0 }}
+                      <Link
+                        to={link.path}
+                        onClick={() => setIsOpen(false)}
+                        className={cn(
+                          'text-3xl font-black tracking-tighter transition-all flex items-center justify-between group py-2',
+                          isActive(link.path) ? 'text-mocha' : 'text-white/40 hover:text-white'
+                        )}
                       >
-                        <Play className="w-4 h-4 fill-current" />
-                      </motion.div>
+                        <span className="relative">
+                          {link.name}
+                          {isActive(link.path) && (
+                            <motion.div 
+                              layoutId="mobile-nav-indicator"
+                              className="absolute -left-4 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-mocha"
+                            />
+                          )}
+                        </span>
+                        <motion.div
+                          animate={{ x: isActive(link.path) ? 0 : -10, opacity: isActive(link.path) ? 1 : 0 }}
+                        >
+                          <Play className="w-5 h-5 fill-current" />
+                        </motion.div>
+                      </Link>
+                    </motion.div>
+                  ))}
+                  
+                  <div className="flex flex-col space-y-4 pt-8 border-t border-white/5">
+                    {isAuthenticated ? (
+                      <button
+                        onClick={() => {
+                          setIsOpen(false);
+                          setShowSidebar(true);
+                        }}
+                        className="flex items-center justify-between p-6 rounded-[2rem] bg-white/5 border border-white/10"
+                      >
+                        <div className="flex items-center space-x-4">
+                          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-mocha to-purple-dark flex items-center justify-center">
+                            {user?.photoURL ? (
+                              <img src={user.photoURL} alt="" className="w-full h-full rounded-2xl object-cover" />
+                            ) : (
+                              <UserIcon className="w-5 h-5 text-white" />
+                            )}
+                          </div>
+                          <div className="text-left">
+                            <p className="text-sm font-black text-white uppercase tracking-tight">Account Console</p>
+                            <p className="text-[10px] font-bold text-mocha uppercase tracking-widest">Manage Projects</p>
+                          </div>
+                        </div>
+                        <ChevronRight className="w-5 h-5 text-white/20" />
+                      </button>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-4">
+                        <Link to="/login" onClick={() => setIsOpen(false)}>
+                          <Button variant="outline" className="w-full py-5 text-sm border-white/10 rounded-2xl">
+                            Log In
+                          </Button>
+                        </Link>
+                        <Link to="/signup" onClick={() => setIsOpen(false)}>
+                          <Button variant="glow" className="w-full py-5 text-sm rounded-2xl">
+                            Sign Up
+                          </Button>
+                        </Link>
+                      </div>
+                    )}
+                    <Link to="/request-cinebit" onClick={() => setIsOpen(false)}>
+                      <Button variant="glow" className="w-full py-6 text-base bg-mocha text-white hover:bg-mocha/90 border-none rounded-[2rem] shadow-xl shadow-mocha/20">
+                        Request a CineBit
+                      </Button>
                     </Link>
-                  </motion.div>
-                ))}
-                <div className="flex flex-col space-y-4 pt-8 border-t border-white/10">
-                  {!isAuthenticated && (
-                    <>
-                      <Link to="/login" onClick={() => setIsOpen(false)}>
-                        <Button variant="outline" className="w-full py-4 text-lg border-white/10">
-                          Log In
-                        </Button>
-                      </Link>
-                      <Link to="/signup" onClick={() => setIsOpen(false)}>
-                        <Button variant="glow" className="w-full py-4 text-lg">
-                          Sign Up
-                        </Button>
-                      </Link>
-                    </>
-                  )}
-                  <Link to="/request-cinebit" onClick={() => setIsOpen(false)}>
-                    <Button variant="glow" className="w-full py-4 text-lg bg-mocha text-background hover:bg-mocha/90 border-none">
-                      Request a CineBit
-                    </Button>
-                  </Link>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
       </motion.nav>
@@ -253,64 +301,77 @@ const Navbar = () => {
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 bottom-0 w-full max-w-[400px] bg-background/95 backdrop-blur-2xl border-l border-white/10 z-[101] shadow-2xl flex flex-col"
+              transition={{ type: 'spring', damping: 28, stiffness: 220, mass: 0.8 }}
+              className="fixed top-0 right-0 bottom-0 w-full max-w-[400px] bg-background/80 backdrop-blur-3xl border-l border-white/10 z-[101] shadow-2xl flex flex-col"
             >
-              <div className="p-8 flex items-center justify-between border-b border-white/5">
+              <div className="p-8 flex items-center justify-between border-b border-white/5 bg-white/[0.01]">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-mocha to-purple-dark flex items-center justify-center p-0.5">
-                    <div className="w-full h-full rounded-[0.9rem] bg-black flex items-center justify-center overflow-hidden">
+                  <div className="w-14 h-14 rounded-[1.5rem] bg-gradient-to-br from-mocha/40 to-purple-dark/40 flex items-center justify-center p-0.5 group-hover:scale-105 transition-transform duration-500">
+                    <div className="w-full h-full rounded-[1.3rem] bg-black/50 backdrop-blur-md flex items-center justify-center overflow-hidden border border-white/10">
                       {user?.photoURL ? (
                         <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
                       ) : (
-                        <UserIcon className="w-5 h-5 text-mocha" />
+                        <UserIcon className="w-6 h-6 text-mocha/70" />
                       )}
                     </div>
                   </div>
                   <div>
-                    <h3 className="text-lg font-black text-white tracking-tight">{user?.displayName || 'Studio Member'}</h3>
-                    <p className="text-xs font-medium text-white/30 truncate max-w-[180px]">{user?.email}</p>
+                    <h3 className="text-xl font-black text-white tracking-tighter">{user?.displayName || 'Studio Member'}</h3>
+                    <p className="text-[10px] font-bold text-mocha uppercase tracking-widest opacity-60">Creative Partner</p>
                   </div>
                 </div>
                 <button 
                   onClick={() => setShowSidebar(false)}
-                  className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all"
+                  className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-300 group"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto py-8 px-6 space-y-2">
-                <p className="px-2 text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-4">Workspace</p>
+              <div className="flex-1 overflow-y-auto py-8 px-6 space-y-3 custom-scrollbar">
+                <div className="px-4 mb-6">
+                  <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20">Studio Workspace</p>
+                </div>
                 {sidebarLinks.map((link) => (
                   <Link
                     key={link.name}
                     to={link.path}
                     onClick={() => setShowSidebar(false)}
-                    className="flex items-center justify-between p-4 rounded-[1.5rem] bg-white/[0.02] border border-white/5 hover:border-mocha/30 hover:bg-mocha/5 transition-all group"
+                    className="flex items-center justify-between p-5 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:border-mocha/40 hover:bg-mocha/10 transition-all duration-500 group relative overflow-hidden"
                   >
-                    <div className="flex items-center space-x-4">
-                      <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/40 group-hover:text-mocha transition-colors">
+                    <div className="absolute inset-0 bg-gradient-to-r from-mocha/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="flex items-center space-x-5 relative z-10">
+                      <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-white/40 group-hover:text-mocha group-hover:scale-110 group-hover:bg-mocha/10 transition-all duration-500">
                         <link.icon className="w-5 h-5" />
                       </div>
-                      <span className="font-bold text-white/70 group-hover:text-white transition-colors">{link.name}</span>
+                      <div className="flex flex-col">
+                        <span className="font-bold text-white/70 group-hover:text-white transition-colors tracking-tight">{link.name}</span>
+                        <span className="text-[9px] font-medium text-white/20 group-hover:text-white/40 uppercase tracking-widest transition-colors">Access Console</span>
+                      </div>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-white/10 group-hover:text-mocha group-hover:translate-x-1 transition-all" />
+                    <ChevronRight className="w-4 h-4 text-white/10 group-hover:text-mocha group-hover:translate-x-1 transition-all duration-500" />
                   </Link>
                 ))}
               </div>
 
-              <div className="p-8 border-t border-white/5 space-y-4">
+              <div className="p-8 border-t border-white/5 space-y-6 bg-white/[0.01]">
                 <button 
                   onClick={handleLogout}
-                  className="w-full flex items-center justify-center space-x-3 p-5 rounded-[1.5rem] bg-red-500/5 border border-red-500/10 text-red-500/70 font-black uppercase tracking-[0.2em] text-[10px] hover:bg-red-500/10 hover:text-red-500 transition-all"
+                  className="w-full flex items-center justify-center space-x-3 p-5 rounded-[2rem] bg-red-500/5 border border-red-500/10 text-red-500/60 font-black uppercase tracking-[0.3em] text-[10px] hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/30 transition-all duration-500 group"
                 >
-                  <LogOut className="w-4 h-4" />
+                  <LogOut className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                   <span>Terminate Session</span>
                 </button>
-                <p className="text-center text-[9px] font-medium text-white/10 tracking-widest uppercase">
-                  CineBlend Studios © 2026
-                </p>
+                <div className="flex flex-col items-center space-y-2">
+                  <p className="text-[9px] font-black text-white/10 tracking-[0.4em] uppercase">
+                    CineBlend Studios © 2026
+                  </p>
+                  <div className="flex space-x-1">
+                    <div className="w-1 h-1 rounded-full bg-mocha/20" />
+                    <div className="w-1 h-1 rounded-full bg-mocha/40" />
+                    <div className="w-1 h-1 rounded-full bg-mocha/20" />
+                  </div>
+                </div>
               </div>
             </motion.div>
           </>
@@ -318,6 +379,6 @@ const Navbar = () => {
       </AnimatePresence>
     </>
   )
-}
+})
 
 export default Navbar

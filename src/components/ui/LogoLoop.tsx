@@ -28,7 +28,7 @@ const STATIC_LOGOS: Logo[] = [
   { id: 'flask', name: 'Flask', url: 'https://cdn.simpleicons.org/flask/white' },
 
   // Creative Tools
-  { id: 'premiere', name: 'Premiere Pro', url: 'https://cdn.simpleicons.org/adobepremierepro/white' },
+  { id: 'premiere', name: 'Premiere Pro', url: 'https://cdn.simpleicons.org/adobepremiere/white' },
   { id: 'aftereffects', name: 'After Effects', url: 'https://cdn.simpleicons.org/adobeaftereffects/white' },
   { id: 'photoshop', name: 'Photoshop', url: 'https://cdn.simpleicons.org/adobephotoshop/white' },
   { id: 'illustrator', name: 'Illustrator', url: 'https://cdn.simpleicons.org/adobeillustrator/white' },
@@ -52,7 +52,7 @@ interface LogoLoopProps {
   showTitle?: boolean;
 }
 
-const LogoLoop: React.FC<LogoLoopProps> = ({ 
+const LogoLoop: React.FC<LogoLoopProps> = React.memo(({ 
   speed = 40, 
   className,
   title = "Technologies & Tools We Use",
@@ -63,7 +63,7 @@ const LogoLoop: React.FC<LogoLoopProps> = ({
   // Duplicate logos array multiple times to ensure seamless loop on any screen size
   // Using 4 sets ensures that even on massive screens, the transition point (-50%) 
   // is always reached without showing any empty space at the end of the track.
-  const logos = [...STATIC_LOGOS, ...STATIC_LOGOS, ...STATIC_LOGOS, ...STATIC_LOGOS];
+  const logos = React.useMemo(() => [...STATIC_LOGOS, ...STATIC_LOGOS, ...STATIC_LOGOS, ...STATIC_LOGOS], []);
 
   return (
     <section className={cn("relative w-full overflow-hidden py-32 select-none bg-[#050505] border-y border-white/5", className)}>
@@ -133,6 +133,6 @@ const LogoLoop: React.FC<LogoLoopProps> = ({
       </div>
     </section>
   );
-};
+});
 
-export default React.memo(LogoLoop);
+export default LogoLoop;

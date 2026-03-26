@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 import { Play, Instagram, Twitter, Linkedin } from 'lucide-react'
+import { memo } from 'react'
 
-const Footer = () => {
+const Footer = memo(() => {
   const currentYear = new Date().getFullYear()
   const logoUrl = "https://firebasestorage.googleapis.com/v0/b/cineblend-studios.appspot.com/o/assets%2Flogo.png?alt=media";
 
@@ -40,9 +41,9 @@ const Footer = () => {
       {/* Decorative Glow */}
       <div className="absolute top-0 left-1/4 w-64 h-64 bg-mocha/5 blur-[100px] pointer-events-none" />
       
-      <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-y-12 gap-x-6 md:gap-8 relative z-10">
         {/* Brand Column */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="col-span-2 lg:col-span-2 space-y-6 md:space-y-8">
           <Link to="/" className="flex items-center space-x-3">
             <div className="relative w-10 h-10 overflow-hidden rounded-xl bg-gradient-to-br from-mocha to-purple-dark flex items-center justify-center">
               <img 
@@ -122,6 +123,6 @@ const Footer = () => {
       </div>
     </footer>
   )
-}
+})
 
 export default Footer

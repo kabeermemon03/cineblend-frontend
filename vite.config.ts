@@ -22,9 +22,11 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom', 'framer-motion'],
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          animation: ['framer-motion'],
           firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore'],
           ui: ['lucide-react', 'clsx', 'tailwind-merge'],
+          utils: ['date-fns'],
         },
       },
     },

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutDashboard, Users, Briefcase, Users2, MessageSquare, RefreshCcw, Bell, FileText, LogOut, Menu, X, Mail, RotateCcw } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { useNavigate } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 import { adminService } from '@/lib/firebase-services';
 import { SidebarItem } from '@/components/admin/Common';
 
@@ -23,12 +24,19 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [stats, setStats] = useState({
     totalUsers: 0,
     activeRequests: 0,
     pendingRevisions: 0,
     completedProjects: 0
   });
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const unsubscribe = adminService.getStats((newStats) => {
@@ -41,6 +49,8 @@ const AdminDashboard = () => {
     await logout();
     navigate('/login');
   };
+
+  const isMobile = windowWidth < 768;
 
   const menuItems = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
@@ -72,19 +82,47 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex overflow-hidden">
+    <div className="min-h-screen bg-[#050505] text-white flex flex-col md:flex-row overflow-hidden">
+      {/* Sidebar Mobile Overlay */}
+      <AnimatePresence>
+        {isSidebarOpen && isMobile && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSidebarOpen(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[45] md:hidden"
+          />
+        )}
+      </AnimatePresence>
+
       {/* Sidebar */}
       <motion.aside
         initial={false}
-        animate={{ width: isSidebarOpen ? 280 : 0, opacity: isSidebarOpen ? 1 : 0 }}
-        className="relative z-50 bg-white/[0.02] border-r border-white/5 backdrop-blur-xl flex flex-col"
+        animate={{ 
+          width: isSidebarOpen ? (isMobile ? '85%' : 280) : 0,
+          x: isSidebarOpen ? 0 : (isMobile ? -280 : 0),
+          opacity: isSidebarOpen ? 1 : (isMobile ? 0 : 1)
+        }}
+        className={cn(
+          "fixed md:relative z-50 bg-[#080808]/80 backdrop-blur-2xl border-r border-white/5 flex flex-col h-full transition-all duration-500 ease-[0.16,1,0.3,1]",
+          !isSidebarOpen && "md:border-r-0"
+        )}
       >
-        <div className="p-8">
-          <div className="flex items-center gap-3 mb-12">
-            <div className="w-10 h-10 rounded-2xl bg-mocha flex items-center justify-center font-black text-xl italic shadow-[0_0_20px_rgba(183,148,110,0.3)]">
-              CB
+        <div className="p-8 flex-1 overflow-y-auto custom-scrollbar">
+          <div className="flex items-center justify-between mb-12">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-mocha flex items-center justify-center font-black text-xl italic shadow-[0_0_20px_rgba(183,148,110,0.3)]">
+                CB
+              </div>
+              <span className="text-xl font-black uppercase italic tracking-tighter">Admin <span className="text-mocha">Panel</span></span>
             </div>
-            <span className="text-xl font-black uppercase italic tracking-tighter">Admin <span className="text-mocha">Panel</span></span>
+            <button 
+              onClick={() => setSidebarOpen(false)}
+              className="md:hidden w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/40"
+            >
+              <X size={20} />
+            </button>
           </div>
 
           <nav className="space-y-2">
@@ -94,19 +132,23 @@ const AdminDashboard = () => {
                 icon={item.icon}
                 label={item.label}
                 active={activeTab === item.id}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  if (isMobile) setSidebarOpen(false);
+                }}
               />
             ))}
           </nav>
         </div>
 
-        <div className="mt-auto p-8 border-t border-white/5">
+        <div className="p-8 border-t border-white/5 bg-white/[0.01]">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-white/40 hover:text-red-500 hover:bg-red-500/10 transition-all group"
+            className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-white/40 hover:text-red-500 hover:bg-red-500/10 transition-all group overflow-hidden relative"
           >
-            <LogOut size={20} className="group-hover:scale-110 transition-transform" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Logout</span>
+            <div className="absolute inset-0 bg-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <LogOut size={20} className="relative z-10 group-hover:-translate-x-1 transition-transform" />
+            <span className="relative z-10 text-[10px] font-black uppercase tracking-[0.2em]">Logout</span>
           </button>
         </div>
       </motion.aside>
@@ -114,12 +156,12 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <main className="flex-1 relative flex flex-col h-screen overflow-hidden">
         {/* Header */}
-        <header className="h-24 flex items-center justify-between px-12 border-b border-white/5 bg-black/20 backdrop-blur-md relative z-40">
+        <header className="h-24 flex items-center justify-between px-8 md:px-12 border-b border-white/5 bg-black/20 backdrop-blur-md relative z-40">
           <button
             onClick={() => setSidebarOpen(!isSidebarOpen)}
-            className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-white/40 hover:text-white transition-all border border-white/5"
+            className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-white/40 hover:text-white transition-all border border-white/5 group"
           >
-            {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+            {isSidebarOpen ? <X size={20} className="group-hover:rotate-90 transition-transform" /> : <Menu size={20} />}
           </button>
 
           <div className="flex items-center gap-6">

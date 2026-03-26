@@ -13,9 +13,13 @@ import toast from 'react-hot-toast';
 
 export const UserManagement = () => {
   const [users, setUsers] = useState<any[]>([]);
-  const [, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('all');
+  
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const unsubscribe = adminService.getAllUsers((data) => {
@@ -52,6 +56,18 @@ export const UserManagement = () => {
     return matchesSearch && matchesFilter;
   });
 
+  // Paginated Users
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const paginatedUsers = filteredUsers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // Reset page when filter or search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, filter]);
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -78,64 +94,113 @@ export const UserManagement = () => {
         </div>
       </div>
 
-      <div className="bg-white/[0.03] border border-white/10 rounded-[2.5rem] overflow-hidden overflow-x-auto">
-        <table className="w-full text-left border-collapse min-w-[800px]">
-          <thead>
-            <tr className="bg-white/5">
-              <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">User</th>
-              <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Role</th>
-              <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Joined</th>
-              <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-white/5">
-            {filteredUsers.map((u) => (
-              <tr key={u.id} className="hover:bg-white/[0.02] transition-colors group">
-                <td className="px-8 py-6">
-                  <div className="flex items-center gap-4">
-                    <img src={u.photoURL || `https://ui-avatars.com/api/?name=${u.displayName}`} alt="" className="w-10 h-10 rounded-full border border-white/10" />
-                    <div>
-                      <p className="text-sm font-bold text-white">{u.displayName}</p>
-                      <p className="text-[10px] text-white/30">{u.email}</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-8 py-6">
-                  <span className={cn(
-                    "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
-                    u.role === 'admin' ? "bg-mocha/20 text-mocha" : "bg-white/5 text-white/40"
-                  )}>
-                    {u.role || 'client'}
-                  </span>
-                </td>
-                <td className="px-8 py-6 text-sm text-white/60">
-                  {u.createdAt ? format(u.createdAt.toDate(), 'MMM dd, yyyy') : 'N/A'}
-                </td>
-                <td className="px-8 py-6">
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => handleRoleToggle(u.id, u.role || 'client')}
-                      className="px-4"
-                    >
-                      {u.role === 'admin' ? <UserX size={14} className="mr-2" /> : <UserCheck size={14} className="mr-2" />}
-                      {u.role === 'admin' ? 'Revoke Admin' : 'Make Admin'}
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => handleDeleteUser(u.id)}
-                      className="px-4 text-red-500 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <Trash2 size={14} />
-                    </Button>
-                  </div>
-                </td>
+      <div className="bg-white/[0.03] border border-white/10 rounded-[2.5rem] overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[800px]">
+            <thead>
+              <tr className="bg-white/5">
+                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">User</th>
+                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Role</th>
+                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Joined</th>
+                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {loading ? (
+                <tr>
+                  <td colSpan={4} className="px-8 py-12 text-center text-white/20 font-black uppercase tracking-widest text-xs italic">
+                    Loading users...
+                  </td>
+                </tr>
+              ) : paginatedUsers.length > 0 ? (
+                paginatedUsers.map((u) => (
+                  <tr key={u.id} className="hover:bg-white/[0.02] transition-colors group">
+                    <td className="px-8 py-6">
+                      <div className="flex items-center gap-4">
+                        <img 
+                          src={u.photoURL || `https://ui-avatars.com/api/?name=${u.displayName}`} 
+                          alt="" 
+                          className="w-10 h-10 rounded-full border border-white/10 object-cover" 
+                          loading="lazy"
+                        />
+                        <div>
+                          <p className="text-sm font-bold text-white">{u.displayName}</p>
+                          <p className="text-[10px] text-white/30">{u.email}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-8 py-6">
+                      <span className={cn(
+                        "px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border",
+                        u.role === 'admin' ? "bg-mocha/10 text-mocha border-mocha/20" : "bg-white/5 text-white/40 border-white/10"
+                      )}>
+                        {u.role || 'client'}
+                      </span>
+                    </td>
+                    <td className="px-8 py-6 text-[10px] font-bold text-white/40 uppercase tracking-widest">
+                      {u.createdAt ? format(u.createdAt.toDate(), 'MMM dd, yyyy') : 'Recently'}
+                    </td>
+                    <td className="px-8 py-6">
+                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => handleRoleToggle(u.id, u.role || 'client')}
+                          className="p-3"
+                        >
+                          {u.role === 'admin' ? <UserX size={16} /> : <UserCheck size={16} />}
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => handleDeleteUser(u.id)}
+                          className="p-3 hover:text-red-500"
+                        >
+                          <Trash2 size={16} />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="px-8 py-12 text-center text-white/20 font-black uppercase tracking-widest text-xs italic">
+                    No users found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="px-8 py-6 border-t border-white/5 flex items-center justify-between bg-black/20">
+            <p className="text-[10px] font-black uppercase tracking-widest text-white/20">
+              Page {currentPage} of {totalPages}
+            </p>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(prev => prev - 1)}
+                className="px-4 py-2 border-white/5 text-[10px]"
+              >
+                Previous
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(prev => prev + 1)}
+                className="px-4 py-2 border-white/5 text-[10px]"
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -78,7 +78,7 @@ const ProjectShowcase = () => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {projects.map((project, index) => (
             <motion.div
               key={project.id}
@@ -87,12 +87,13 @@ const ProjectShowcase = () => {
               transition={{ delay: index * 0.1, duration: 0.6 }}
               viewport={{ once: true }}
               onClick={() => setSelectedProject(project)}
-              className="group relative cursor-pointer aspect-[4/5] rounded-[3.5rem] overflow-hidden glass-card border-white/5 bg-white/[0.02] backdrop-blur-3xl hover:border-mocha/30 transition-all duration-700"
+              className="group relative cursor-pointer aspect-[4/5] rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden glass-card border-white/5 bg-white/[0.02] backdrop-blur-3xl hover:border-mocha/30 transition-all duration-700"
             >
               <img 
                 src={project.image} 
                 alt={project.title} 
                 className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 ease-out"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
               
