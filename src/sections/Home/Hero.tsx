@@ -17,7 +17,7 @@ const Hero = memo(() => {
             src="https://images.unsplash.com/photo-1536240478700-b869070f9279?auto=format&fit=crop&q=80" 
             alt="Hero Background"
             className="absolute inset-0 w-full h-full object-cover opacity-15 scale-100 animate-slow-zoom"
-            fetchpriority="high"
+            {...{ fetchpriority: "high" } as any}
           />
         </div>
 
