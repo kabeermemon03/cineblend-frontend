@@ -23,8 +23,8 @@ CineBlend Studios is a premium, high-performance creative agency platform built 
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/cineblend-studios.git
-   cd cineblend-studios
+   git clone https://github.com/kabeermemon03/cineblend-frontend.git
+   cd cineblend-frontend
    ```
 
 2. **Install dependencies**:
