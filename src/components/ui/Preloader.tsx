@@ -62,9 +62,14 @@ const Preloader: React.FC = () => {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 1, ease: "easeOut" }}
-              className="relative"
+              className="relative flex flex-col items-center"
             >
-              <div className="text-6xl md:text-8xl font-black tracking-tighter text-white flex items-center gap-2">
+              <img 
+                src="/logo.png" 
+                alt="CineBlend Logo" 
+                className="w-32 h-32 md:w-48 md:h-48 object-contain mb-4"
+              />
+              <div className="text-4xl md:text-6xl font-black tracking-tighter text-white flex items-center gap-2">
                 CINE<span className="text-mocha">BLEND</span>
               </div>
               <motion.div 

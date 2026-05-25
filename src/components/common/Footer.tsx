@@ -4,7 +4,7 @@ import { memo } from 'react'
 
 const Footer = memo(() => {
   const currentYear = new Date().getFullYear()
-  const logoUrl = "https://firebasestorage.googleapis.com/v0/b/cineblend-studios.appspot.com/o/assets%2Flogo.png?alt=media";
+  const logoUrl = "/logo.png";
 
   const sections = [
     {
@@ -45,11 +45,11 @@ const Footer = memo(() => {
         {/* Brand Column */}
         <div className="col-span-2 lg:col-span-2 space-y-6 md:space-y-8">
           <Link to="/" className="flex items-center space-x-3">
-            <div className="relative w-10 h-10 overflow-hidden rounded-xl bg-gradient-to-br from-mocha to-purple-dark flex items-center justify-center">
+            <div className="relative w-12 h-12 overflow-hidden rounded-xl bg-transparent flex items-center justify-center">
               <img 
                 src={logoUrl} 
                 alt="CineBlend Logo" 
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                   (e.target as HTMLImageElement).parentElement?.querySelector('.fallback-icon')?.classList.remove('hidden');

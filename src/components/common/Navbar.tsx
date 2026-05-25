@@ -59,7 +59,7 @@ const Navbar = memo(() => {
 
   const isActive = (path: string) => location.pathname === path
 
-  const logoUrl = "https://firebasestorage.googleapis.com/v0/b/cineblend-studios.appspot.com/o/assets%2Flogo.png?alt=media";
+  const logoUrl = "/logo.png";
 
   return (
     <>
@@ -78,12 +78,12 @@ const Navbar = memo(() => {
             <motion.div 
               whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
               transition={{ duration: 0.5 }}
-              className="relative w-10 h-10 overflow-hidden rounded-xl bg-gradient-to-br from-mocha to-purple-dark flex items-center justify-center"
+              className="relative w-12 h-12 overflow-hidden rounded-xl bg-transparent flex items-center justify-center"
             >
               <img 
                 src={logoUrl} 
                 alt="CineBlend Logo" 
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                   (e.target as HTMLImageElement).parentElement?.querySelector('.fallback-icon')?.classList.remove('hidden');
@@ -91,7 +91,7 @@ const Navbar = memo(() => {
               />
               <Play className="fallback-icon hidden w-5 h-5 text-white fill-white" />
             </motion.div>
-            <span className="text-xl font-bold tracking-tighter text-white">
+            <span className="text-xl font-bold tracking-tighter text-white hidden sm:block">
               CINE<span className="text-mocha">BLEND</span>
             </span>
           </Link>
